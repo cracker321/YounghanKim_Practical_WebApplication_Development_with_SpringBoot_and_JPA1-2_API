@@ -32,14 +32,17 @@ public class Order {
     private Member member; //'클래스 Member의 필드 id'를 '참조한 필드'
 
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    //'주인이 아닌 객체(1. 여기 'Order 객체')'가 '주인 객체(N. 저기 'OrderItem 객체')'를
+    //'종속시켜 관리하기' 때문에, '주인이 아닌 객체(여기 'Order 객체')'의 내부 필드에
+    //'cascade'를 작성하는 것이다!
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     //- '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로, 반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
     //- 'cascade = CascadeType.PERSIST':
-    //'1:1 양방향 매핑'에서는 꼭 반드시 '주인객체('Order 객체')의 내부 필드'에 'Cascade'를 쓰는 것은 아니고,
-    //(다만, 여기서는 우연히 'Order 객체'가 '주인객체'이긴 함)
+    //'1:1 양방향 매핑'에서는 꼭 반드시 '주인이 아닌 객체('Delivery 객체')의 내부 필드'에 'cascade'를 쓰는 것은 아니고,
+    //(여기서는 'Order 객체 = 주인 객체', 'Delivery 객체 = 주인이 아닌 객체')
     //'더 상위 객체(하위 객체를 종속시켜 관리하는 객체)'에 Cascade를 붙이는 것이다!
     //여기 'Order 객체와 Delivery 객체 간의 관계에서,
     //'주문 Order'가 발생해야, 그에 이어져서 '배송 Delivery'라는 사건이 발생하므로,
