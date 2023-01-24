@@ -17,10 +17,11 @@ Setter는 문제가 다르다. Setter를 호출하면 데이터가 변한다. Se
 엔티티에가 도대체 왜 변경되는지 추적하기 점점 힘들어진다. 그래서 엔티티를 변경할 때는 Setter 대신에
 변경 지점이 명확하도록 변경을 위한 비즈니스 메서드를 별도로 제공해야 한다.
  */
+
 @Getter
 @Setter
 @DiscriminatorColumn(name = "DTYPE")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //'단일 테이블 전략'
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //'단일 테이블 전략'. '상속관계 매핑'.
 @Entity
 public abstract class Item { //[ '엔티티 클래스 개발1'강 19:04~ ]
     // - '추상 클래스': '하나 이상의 추상 메소드'만 가지면 성립되고(cf: '추상 메소드가 아예 없더라도',

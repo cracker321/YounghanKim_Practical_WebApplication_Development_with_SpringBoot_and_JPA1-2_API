@@ -13,12 +13,12 @@ public class CategoryItem {
     @Column(name = "CATEGORYITEM_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEOGRY_ID")
     private Category category;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 

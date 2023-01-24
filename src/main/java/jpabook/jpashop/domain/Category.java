@@ -21,12 +21,12 @@ public class Category {
 //====================================================================================================
     //< 내부 자체의 매핑 관계 > 크게 중요한 건 아닌 듯..?
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> children = new ArrayList<>();
+    private List<Category> children = new ArrayList<>(); //'컬렉션'은 이처럼 '필드'에서 '초기화해라!'
 
 //====================================================================================================
 }

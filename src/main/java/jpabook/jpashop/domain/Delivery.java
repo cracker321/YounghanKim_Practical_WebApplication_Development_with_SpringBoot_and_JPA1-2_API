@@ -16,7 +16,7 @@ public class Delivery {
     @Column(name = "DELIVERY_ID")
     private Long id;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     private Order order;
 
     @Embedded //'Address 객체 타입'으로 'JPA의 내장 타입(임베디드 타입)을 사용했다'라는 뜻.
@@ -26,7 +26,7 @@ public class Delivery {
     private Address address;
 
 
-    @Enumerated(EnumType.STRING) //'Enum 타입 필드'를 가질 때에는, 반드시 '@Enumerated(EnumType.String'을
+    @Enumerated(EnumType.STRING) //'Enum 타입 필드'를 가질 때에는, 반드시 '@Enumerated(EnumType.String)'을
                                  //붙여줘야 한다!
                                  //cf)'(EnumType.ORDINAl)': 디폴트값으로 이게 설정되어 있긴 한데,
                                  //                         자동으로 컬럼에 1, 2, 3, ..이렇게 늘어나게 해주는건데
