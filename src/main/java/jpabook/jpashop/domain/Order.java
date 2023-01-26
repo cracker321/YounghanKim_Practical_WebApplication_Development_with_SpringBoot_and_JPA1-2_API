@@ -32,12 +32,15 @@ public class Order {
     private Member member; //'클래스 Member의 필드 id'를 '참조한 필드'
 
 
+    //'주인 객체'는 '저쪽 객체인 OrderItem 객체'임
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     //'주인이 아닌 객체(1. 여기 'Order 객체')'가 '주인 객체(N. 저기 'OrderItem 객체')'를
     //'종속시켜 관리하기' 때문에, '주인이 아닌 객체(여기 'Order 객체')'의 내부 필드에
     //'cascade'를 작성하는 것이다!
     private List<OrderItem> orderItems = new ArrayList<>();
 
+
+    //'주인 객체'는 '현재 객체인 Order 객체'임
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     //- '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로, 반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
     //- 'cascade = CascadeType.PERSIST':
@@ -53,7 +56,85 @@ public class Order {
 
     private LocalDateTime orderDate; //
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
 
+//===================================================================================================
+
+
+    //[ '엔티티 설계시 주의점'강. 22:50~ ]. 더 확인하기!
+    //< 연관관계 편의 메소드1 > : '양방향 매핑'일 때 사용하는 것!
+    //'주인인 Order 객체(N)'와 '주인이 아닌 Member 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
+    public void changeMember(Member m){
+
+        //여기 'if문 로직'은 '들어온 매개변수 m'과는 무관함
+        if(this.member != null){
+                this.member.getOrders().remove(this);
+        }
+        this.member = m;
+
+        m.getOrders().add(this);
+
+    }
+
+
+
+    //< 연관관계 편의 메소드2 >
+    //'주인인 Order 객체(1)'와 '주인이 아닌 Delivery 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
+    public void changeDelivery(Delivery d){
+
+        if(this.delivery != null){
+            this.delivery.getOrder().remove(this);
+        }
+        this.delivery = d;
+
+        d.getOrder().add(this);
+
+    }
+
+
+    //< 연관관계 편의 메소드2 >
+    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
+    public void addOrderItem(OrderItems oi){
+
+        if(oderItems != null){
+            this.orderItems.getOrder
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+//
+//    //< 연관관계 편의 메소드2 >
+//    public void addOrderItem(OrderItem oi){
+//
+//        orderItems.add(oi); //
+//        oi.setOrder(this); //'OrderItem 객체의 속성'으로 'Order 객체 this..이거 더 확인하기!'를 넣어줌.
+//    }
+//
+//
+//    //< 연관관계 편의 메소드3 >
+//    public void setDelivery(Delivery d){
+//
+//        this.delivery = d;
+//        d.setOrder(this);
+//    }
+
+
+//===================================================================================================
+
+
+
 }
+

@@ -23,7 +23,7 @@ public class MemberRepositoryTest { //'레펏 MemberRepository'가 잘 작동하
 
     @Transactional //- 'EntityManager를 통한 모든 데이터 변경'은 '트랜잭션 안'에서 이루어져야 한다!
                    //- '@Transactional'은 '테스트에 들어가 있으면', '테스트 완료 후 다 롤백해버림'.
-    @Rollback(false) //- 그러헥 이 어노테이션을 쓰면, 롤백 안시킨다! 그럼 이제 롤백 안하고 바로 커밋해버린다
+    @Rollback(false) //- 그렇게 이 어노테이션을 쓰면, 롤백 안시킨다! 그럼 이제 롤백 안하고 바로 커밋해버린다
     @Test
     public void testMember() throws Exception{
 
