@@ -3,20 +3,44 @@ package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
+@RequiredArgsConstructor
+//'현재 클래스 MemberService의 내부에 있는 필드들 중에서', '@NonNull' 또는 'final'이
+//붙어있는 필드들을 매개변수로 갖는 생성자를 자동으로 만들어주는 어노테이션임.
+//e.g) 아래 필드들 같은 경우,
+//      MemberSerivce memberService(MemberRepository memberRepository, PostService, postService){
+//                  this.memberRepository = memberRepository;
+//                  this.postService = postService;
+//      }
+//위 생성자를 '대신 만들어주는' 어노테이션이 '@RequiredArgsConstructor'이다!!
+//https://mangkyu.tistory.com/78
+@Transactional(readOnly = true)
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+   //< 생성자를 통한 의존성 주입 >
+   //'레펏 MemberRepository'와 '서비스 PostService'를 모두 '의존성 주입'한다.
+   private final MemberRepository memberRepository;
+   @NonNull
+   private PostService postService; //또는, 'private final MemberRepository memberRepository'라고 써도 됨
+
+
+
+
+
 
     //개발해야 할 기능
     //< 회원 가입 >
     //'클라이언트로부터 전달받은 회원가입 하려는 '엔티티 Member 객체''를 '통으로 매개변수에 넣음'.
+    @Transactional
     public Long join(Member member){ //[ '회원 서비스 개발'강 03:40~ ]
                                      //이 'Member 객체'를 아래 '영속성 컨텍스트'에 넣을 때,
                                      //이 'Member 객체 자체'는 'Member 객체의 PK인 id값'으로 인식되어져 버려서,
@@ -57,6 +81,20 @@ public class MemberService {
 //=====================================================================================================
 
     //< 전체 회원 조회 >
+    //@Transactional(readOnly = true) //- '조회'를 수행할 때, '읽기 전용 트랜잭션 @Transactional(readOnly = true)'
+                                      //  를 붙이면, 보다 좀 더 '성능 최적화'가 가능함.
+                                      //- 그런데, '현재 컨트롤러 내부'에는 '개별회원 조회, 전체회원 조회 등'의
+                                      // '회원 조회 메소드'가 상대적으로 많아서
+                                      // '@Transactional(readOnly = true)' 를 사용할 곳이 상대적으로 많음.
+                                      //  따라서, 아에 그냥 '서비스 MemberService 바로 위에
+                                      //  @Transactional(readOnly = true)'를 붙여버림.
+                                      //- 그리고, '조회'가 아닌 '신규생성(Creeate)', '수정(Update)',
+                                      //  '삭제(Delete)' 등 '그냥 @Transactional(readOnly = false)만 쓰는 
+                                      //  메소드' 위에는 그냥 그대로 '@Transactional(readOnly = false)'을 
+                                      //  써주면, 그 '@Transactional(readOnly = false)'가
+                                      //  그 메소드에 한해서는 '@Transactional(readOnly = true)'보다 더
+                                      //  우선권을 갖게 되므로, 그 위에 그렇게 써주면 된다!
+
     List<Member> findMembers(){
 
         List<Member> members = memberRepository.findAll();
@@ -70,7 +108,10 @@ public class MemberService {
 
     //< 개별 회원 조회>
     //'개별 회원을 식별'하려면 '식별자인 id'가 필요하기 때문에, 매개변수로 id를 건네준 것임
-    Member findMember(Long memberId){
+    //@Transactional(readOnly = true) //'조회'를 수행할 때,'읽기 전용 트랜잭션 @Transactional(readOnly = true)'
+                                      //를 붙이면, 보다 좀 더 '성능 최적화'가 가능함
+    Member findMember(Long memberId){ //'조회'를 수행할 때 '@Transactional(readOnly = true)'를 붙이면,
+                                      //보다 좀 더 '성능 최적화'가 가능함.
 
         Member member = memberRepository.findOne(memberId);
 
