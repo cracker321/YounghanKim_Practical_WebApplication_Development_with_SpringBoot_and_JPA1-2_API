@@ -80,31 +80,31 @@ public class Order {
 
 
 
-    //< 연관관계 편의 메소드2 >
-    //'주인인 Order 객체(1)'와 '주인이 아닌 Delivery 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
-    public void changeDelivery(Delivery d){
-
-        if(this.delivery != null){
-            this.delivery.getOrder().remove(this);
-        }
-        this.delivery = d;
-
-        d.getOrder().add(this);
-
-    }
-
-
-    //< 연관관계 편의 메소드2 >
-    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
-    public void addOrderItem(OrderItems oi){
-
-        if(oderItems != null){
-            this.orderItems.getOrder
-        }
-
-
-
-    }
+//    //< 연관관계 편의 메소드2 >
+//    //'주인인 Order 객체(1)'와 '주인이 아닌 Delivery 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
+//    public void changeDelivery(Delivery d){
+//
+//        if(this.delivery != null){
+//            this.delivery.getOrder().remove(this);
+//        }
+//        this.delivery = d;
+//
+//        d.getOrder().add(this);
+//
+//    }
+//
+//
+//    //< 연관관계 편의 메소드2 >
+//    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
+//    public void addOrderItem(OrderItems oi){
+//
+//        if(oderItems != null){
+//            this.orderItems.getOrder
+//        }
+//
+//
+//
+//    }
 
 
 
