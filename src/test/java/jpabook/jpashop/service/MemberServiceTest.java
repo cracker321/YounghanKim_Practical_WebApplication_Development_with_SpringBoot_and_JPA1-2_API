@@ -76,7 +76,7 @@ public class MemberServiceTest {
 
 
     //[ '회원 기능 테스트'강 12:00~ ]
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void 중복회원검증이_잘_검사되는지() throws Exception{
 
 
@@ -94,9 +94,24 @@ public class MemberServiceTest {
 
         //# 조건 when
         memberService.join(mmm2); //먼저, 'mmm2 객체'를 DB에 저장한 후, 그 저장한 회원 id값을 그냥 별 뜻 없이 리턴함.
-        memberService.join(mmm3); //이걸 입력할 때 당연히 '중복회원 검증 로직에 따라 지금 여기 중복회원이 입력되었으므로,
-                                  //정상적인 예외가 발생해서 테스트서버 실행 시 테스트가 실패해야 한다!'.
-                                  //그게 이 예외 검증 테스트코드 작성의 목표인 것임.
+        memberService.join(mmm3); //- 이렇게 입력한다면 당연히 '중복회원 검증 로직에 따라 지금 여기 중복회원이 입력되었으므로,
+                                  //  정상적인 예외가 발생해서 테스트서버 실행 시 테스트가 실패해야 한다!'.
+                                  //  그게 이 예외 검증 테스트코드 작성의 목표인 것임.
+                                  //- 그런데, '현재 메소드 위 @Test 옆에 'expected = IllegalStateException.class'를
+                                  //  입력해줬기에, 이제 이걸 '주석 해제'해서 테스트서버 동작시켜도, 이제 테스트서버 자체가
+                                  //  에러 없이 정상적으로 작동한다!
+
+          //원래 아래 로직처럼 작성해야 하는데, 위에 이 '현재 메소드의 @Test 옆에 'expected = IllegalStateException.class'를
+          //입력해주면, 그게 아래 로직을 다 대체해준다. 즉, 깔끔하게 해주는 것임.
+          //그러면 이제, 아래 로직을 이렇게 주석처리하고, 위에 'memberService.join(mmm3)'를 '주석 해제'해서 테스트해 줄 수 있다!
+//        //[ '회원 기능 테스트'강 15:00~ ]
+//        try{    //따라서, 일단 이 테스트코드를 정상적으로 동작시켜서 확인이라도 해봐야 하기 때문에, 'try-catch문'으로
+//                //'memberService.join(mmm3)'를 넣어준다
+//            memberService.join(mmm3);
+//        }catch(IllegalStateException e){ //이 '테스트코드의 예외'를 발생시킴
+//
+//            return; //'return;'와 'return null' 은 동일한 뜻임!
+//        }
 
 
 
