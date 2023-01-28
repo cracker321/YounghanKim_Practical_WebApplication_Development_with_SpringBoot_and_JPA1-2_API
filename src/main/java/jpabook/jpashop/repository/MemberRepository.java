@@ -44,11 +44,11 @@ public class MemberRepository {
 //=================================================================================================================
 
 
-    //< '개별 회원(1명)을 'id값'으로 조회'하기 >
+    //< '개별 회원(1명)을 DB 'id값'으로 조회'하기 >
     //'클라이언트로부터 매개변수로 들어온 id에 해당하는 1명의 회원'을 DB에서 찾아와서 '그 회원을 리턴'해줌
-    public Member findOne(Long id){
+    public Member findOne(Long memberId){
 
-        Member member = em.find(Member.class, id); //'조회타입', '들어온 id값' 순
+        Member member = em.find(Member.class, memberId); //'조회타입', '들어온 id값' 순
 
         return member;
     }

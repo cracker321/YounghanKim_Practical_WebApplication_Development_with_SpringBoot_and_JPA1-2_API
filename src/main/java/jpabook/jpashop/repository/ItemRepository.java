@@ -1,11 +1,13 @@
 package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Item.Item;
+import jpabook.jpashop.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -29,7 +31,34 @@ public class ItemRepository {
 //================================================================================================================
 
 
-    //< 개별 item(1개)를 DB에서 '조회'하기 >
+    //< '개별 상품(1개)을 DB로부터 'id값'으로 조회'하기 >
+    public Item findOne(Long itemId){
+
+
+        Item item = em.find(Item.class, itemId);
+
+        return item;
+    }
+
+
+//================================================================================================================
+
+
+    //< '모든 상품 조회'하기 >
+    public List<Item> findAll(){
+
+
+        List<Item> items = em.createQuery("select item from Item item", Item.class)
+                .getResultList();
+
+        return items;
+
+    }
+
+
+//================================================================================================================
+
+
 
 
 //================================================================================================================
@@ -39,9 +68,7 @@ public class ItemRepository {
 //================================================================================================================
 
 
-//================================================================================================================
 
 
 
-//================================================================================================================
 }
