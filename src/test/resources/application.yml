@@ -1,42 +1,44 @@
 # < 테스트서버 실행시킬 때, 메인서버의 DB 실행시키지 않고, 그냥 '인메모리 DB로 간단하게 실행시켜서' 테스트서버 동작시키기 >
-# 'test 폴더' 밑에 --> 'resources 파일' 생성 --> '기존 메인서버의 application.yml'을 복사해서 그 아래에 붙임
+# - 'test 폴더' 밑에 --> 'resources 파일' 생성 --> '기존 메인서버의 application.yml'을 복사해서 그 아래에 붙임
 # --> 'h2 DB의 url을 'url: jdbc:h2:mem:test''로 변경시키기
 
+# - 그런데, 더 놀라운 건, 스프링부트는 yml 설정에서 'spring:; 이하에 아~무것도 존재하지 않으면,
+# 그냥 자동적으로 '인메모리 방식'으로 서버를 돌려줘서, 저 아래 'spring: 이하 부분들 다 주석처리 해줘도 된다!!'
 server:
   port: 8080
 
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  datasource:
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true #김영한 강의에서는 이게 'format_sql'과 동일 레벨에 있어야 한다는데...
-    defer-datasource-initialization: true #각종 DB의 버전 변경사항이 있더라도, 이전 버전 사용했던 것을 업데이트 이후에도 그대로 사용가능하게 하는 것
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        highlight_sql: true
-
-
-  messages:
-    basename: messages #우리가 사용할 메시지 파일(다국어 파일)의 이름을 'messages'라고 저장하는 것
-    #'리소스 폴더'-->'messages.properties'를 만들어준다. 여기서 'messages'는 바로 여기 'yml 파일'에서 작성한
-    #'basename: messages'의 'messages'와 동일하게 해줘야 함!
-
-
-  devtools:
-    livereload:
-      enabled: true
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#  datasource:
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true #김영한 강의에서는 이게 'format_sql'과 동일 레벨에 있어야 한다는데...
+#    defer-datasource-initialization: true #각종 DB의 버전 변경사항이 있더라도, 이전 버전 사용했던 것을 업데이트 이후에도 그대로 사용가능하게 하는 것
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        use_sql_comments: true
+#        highlight_sql: true
+#
+#
+#  messages:
+#    basename: messages #우리가 사용할 메시지 파일(다국어 파일)의 이름을 'messages'라고 저장하는 것
+#    #'리소스 폴더'-->'messages.properties'를 만들어준다. 여기서 'messages'는 바로 여기 'yml 파일'에서 작성한
+#    #'basename: messages'의 'messages'와 동일하게 해줘야 함!
+#
+#
+#  devtools:
+#    livereload:
+#      enabled: true
 
 
 logging:

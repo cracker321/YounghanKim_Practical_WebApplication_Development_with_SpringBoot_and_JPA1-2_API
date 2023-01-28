@@ -19,9 +19,15 @@ import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
 /*
+반드시 필독! 테스트서버 돌릴 땐 항상 이렇게 하기!
+[ '회원 기능 테스트'강. 20:45~ ]
 < 테스트서버 실행시킬 때, 메인서버의 DB 실행시키지 않고, 그냥 '인메모리 DB로 간단하게 실행시켜서' 테스트서버 동작시키기 >
-'test 폴더' 밑에 --> 'resources 파일' 생성 --> '기존 메인서버의 application.yml'을 복사해서 그 아래에 붙임
+
+# 'test 폴더' 밑에 --> 'resources 파일' 생성 --> '기존 메인서버의 application.yml'을 복사해서 그 아래에 붙임
 --> 'h2 DB의 url을 'url: jdbc:h2:mem:test''로 변경시키기
+
+# 그런데, 더 놀라운 건, 스프링부트는 yml 설정에서 'spring:; 이하에 아~무것도 존재하지 않으면,
+  그냥 자동적으로 '인메모리 방식'으로 서버를 돌려줘서, 저 아래 'spring: 이하 부분들 다 주석처리 해줘도 된다!!'
  */
 @RunWith(SpringRunner.class) // [ '회원 기능 테스트'강. 17:15~ ]
                              //'JUnit을 실행할 때, 이 스프링부트 '메인 서버(아마도?)'와 같이 엮어서 실행시켜주는 것
