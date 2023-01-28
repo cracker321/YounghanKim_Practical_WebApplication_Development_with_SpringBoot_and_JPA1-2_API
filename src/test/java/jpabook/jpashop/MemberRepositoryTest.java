@@ -53,4 +53,4 @@ public class MemberRepositoryTest { //'레펏 MemberRepository'가 잘 작동하
 
 
     }
-}
+
