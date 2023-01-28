@@ -20,7 +20,6 @@ Setter는 문제가 다르다. Setter를 호출하면 데이터가 변한다. Se
  */
 
 @Getter
-@Setter
 @DiscriminatorColumn(name = "DTYPE")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) //'단일 테이블 전략'. '상속관계 매핑'.
 @Entity
@@ -53,13 +52,27 @@ public abstract class Item { //[ '엔티티 클래스 개발1'강 19:04~ ]
 
     private int price;
 
-    private int stockQuantity;
+    private int stockQuantity; //'재고수량 데이터 stockQuantity'를 '수정, 변경하여 저장시켜야 하는 곳'에서 로직 작성할 때는
+                               //이 '필드 stockQuantity'를 '세터를 사용해서 'setStockQuantity(...)' 이렇게 하는 것이 아니라',
+                               //저~ 아래 내가 직접 작성한 '메소드 addStock', '메소드 removeStock'처럼
+                               //'필드 stockQuantity를 수정하는 메소드를 직.접.작.성 해서 그 데이터를
+                               //'수정, 변경'시켜야 한다!
+                               //즉, 저~ 아래 '메소드 addStock'과 '메소드 removeStock'은, 다른 외부 클래스에서
+                               //'setStockQuantity(...)'를 사용해야 할 때 그 대신해서 사용하는 것이다!
 
     @OneToMany(mappedBy = "item")
     private List<CategoryItem> categoryItems = new ArrayList<>();
 
 
 //================================================================================================================
+
+
+    //'재고수량 데이터 stockQuantity'를 '수정, 변경하여 저장시켜야 하는 곳'에서 로직 작성할 때는
+    //저 위에 '필드 stockQuantity'를 '세터를 사용해서 'setStockQuantity(...)' 이렇게 하는 것이 아니라',
+    //여기 내가 직접 작성한 '메소드 addStock', '메소드 removeStock'처럼
+    //'필드 stockQuantity를 수정하는 메소드를 직.접.작.성 해서 그 데이터를 '수정, 변경'시켜야 한다!
+    //즉, 아래 '메소드 addStock', '메소드 removeStock'은, 다른 외부 클래스에서 'setStockQuantity(...)'를
+    //사용해야 할 때 그 대신해서 사용하는 것이다!
 
 
     //[ '상품 엔티티 개발(비즈니스 로직 추가)'강. 01:20~ ]
@@ -84,5 +97,9 @@ public abstract class Item { //[ '엔티티 클래스 개발1'강 19:04~ ]
         this.stockQuantity = restStock; //이렇게 설정해주면 됨
 
     }
+
+
+//==============================================================================================================
+
 
 }
