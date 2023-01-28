@@ -15,10 +15,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import javax.persistence.EntityManager;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import static org.junit.Assert.*;
+/*
+< 테스트서버 실행시킬 때, 메인서버의 DB 실행시키지 않고, 그냥 '인메모리 DB로 간단하게 실행시켜서' 테스트서버 동작시키기 >
+'test 폴더' 밑에 --> 'resources 파일' 생성 --> '기존 메인서버의 application.yml'을 복사해서 그 아래에 붙임
+--> 'h2 DB의 url을 'url: jdbc:h2:mem:test''로 변경시키기
+ */
+@RunWith(SpringRunner.class) // [ '회원 기능 테스트'강. 17:15~ ]
+                             //'JUnit을 실행할 때, 이 스프링부트 '메인 서버(아마도?)'와 같이 엮어서 실행시켜주는 것
+                             //즉, '메인 서버도 먼저 실행시킨 후 테스트서버가 실행되는 순서'이다!(아마 맞는데, 더 확실히 알기!)
+@SpringBootTest //'현재 스프링부트 메인 서버를 띄운 상태'에서 '이 테스트서버'를 실행하는 것.
+                //이게 없으면 아래 '@Autowired'에 연결되어 있는 의존성 주입이 다 실패하게 됨.
 @Transactional //'테스트 케이스일 경우에서 사용되는 '@Transactional''은 기본적으로 'SQL 쿼리문을 DB로 커밋 안 하고, 롤백을 해버린다'.
                //즉, 이건 테스트코드이기에 당연히 DB로 'INSERT ...' 이런 쿼리문을 애초에 날리지 않고, 다시 롤백해버린다.
                //(왜냐하면, '보통 테스트를 반복해서 하고', 그에 따라 DB에 쿼리문을 날려서 CRUD된 데이터가 남아있으면 안되기 때문!)
@@ -34,6 +43,8 @@ public class MemberServiceTest {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    EntityManager em; //반드시 이 'EntityManger 객체'를 '의존성 주입'시켜줘야 한다!
 
 
 //===============================================================================================================
