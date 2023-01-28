@@ -94,7 +94,9 @@ public class MemberServiceTest {
 
         //# 조건 when
         memberService.join(mmm2); //먼저, 'mmm2 객체'를 DB에 저장한 후, 그 저장한 회원 id값을 그냥 별 뜻 없이 리턴함.
-        memberService.join(mmm3); //이걸 입력할 때 당연히 딱 예외가 발생해야 한다
+        memberService.join(mmm3); //이걸 입력할 때 당연히 '중복회원 검증 로직에 따라 지금 여기 중복회원이 입력되었으므로,
+                                  //정상적인 예외가 발생해서 테스트서버 실행 시 테스트가 실패해야 한다!'.
+                                  //그게 이 예외 검증 테스트코드 작성의 목표인 것임.
 
 
 
