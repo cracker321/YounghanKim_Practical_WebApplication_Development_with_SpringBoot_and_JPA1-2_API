@@ -10,11 +10,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -81,7 +82,7 @@ public class MemberServiceTest {
 
 
         //# 전제 given
-        //'중복된 회원을 잘 검증해서 골라내는지 여부'를 파악하기 위해, '동일한 이름 ahra를 가진 'mm2 객체'와 'mm3 객체'를 생성'함.
+        //'중복된 회원을 잘 검증해서 골라내는지 여부'를 파악하기 위해, '동일한 이름 ahra를 가진 'mmm2 객체'와 'mmm3 객체'를 생성'함.
         Member mmm2 = new Member();
         mmm2.setName("ahra");
         mmm2.setAddress(new Address("Van", "Robson", "11555"));
@@ -94,12 +95,15 @@ public class MemberServiceTest {
 
         //# 조건 when
         memberService.join(mmm2); //먼저, 'mmm2 객체'를 DB에 저장한 후, 그 저장한 회원 id값을 그냥 별 뜻 없이 리턴함.
-        memberService.join(mmm3); //- 이렇게 입력한다면 당연히 '중복회원 검증 로직에 따라 지금 여기 중복회원이 입력되었으므로,
-                                  //  정상적인 예외가 발생해서 테스트서버 실행 시 테스트가 실패해야 한다!'.
+        memberService.join(mmm3); //- '원래라면', 이렇게 입력한다면 당연히 '중복회원 검증 로직에 따라 지금 여기 중복회원이
+                                  // 입력되었으므로, 정상적인 예외가 발생해서 테스트서버 실행 시 테스트가 실패해야 한다!'.
                                   //  그게 이 예외 검증 테스트코드 작성의 목표인 것임.
                                   //- 그런데, '현재 메소드 위 @Test 옆에 'expected = IllegalStateException.class'를
                                   //  입력해줬기에, 이제 이걸 '주석 해제'해서 테스트서버 동작시켜도, 이제 테스트서버 자체가
                                   //  에러 없이 정상적으로 작동한다!
+                                  //  즉, 여기서 발생해서 이 메소드 밖으로 튀어나가서 '테스트서버 에러'를 발생시키는 에러를
+                                  //  현재 메소드 위의 'expected = IllegalStateException.class'가 잡아줘서
+                                  //  이제 더 이상 '테스트서버 에러가 발생하지 않는다!'
 
           //원래 아래 로직처럼 작성해야 하는데, 위에 이 '현재 메소드의 @Test 옆에 'expected = IllegalStateException.class'를
           //입력해주면, 그게 아래 로직을 다 대체해준다. 즉, 깔끔하게 해주는 것임.
