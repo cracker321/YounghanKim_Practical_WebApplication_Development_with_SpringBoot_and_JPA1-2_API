@@ -65,7 +65,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
         //  그리고, '레퍼지토리'는 '서비스'<<---->>>'DB' 간의 연결을 담당해주는 것임.
         memberRepository.save(member);
 
-        return member.getId();
+        return member.getId(); //새롭게 회원가입하여 DB에 저장시킨 그 회원의 id값을 그냥 별 이유 없이 반환해주는 것임
     }
 
 

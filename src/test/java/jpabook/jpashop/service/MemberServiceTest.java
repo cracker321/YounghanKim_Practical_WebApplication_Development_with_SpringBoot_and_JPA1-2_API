@@ -81,22 +81,31 @@ public class MemberServiceTest {
 
 
         //# 전제 given
+        //'중복된 회원을 잘 검증해서 골라내는지 여부'를 파악하기 위해, '동일한 이름 ahra를 가진 'mm2 객체'와 'mm3 객체'를 생성'함.
         Member mmm2 = new Member();
         mmm2.setName("ahra");
         mmm2.setAddress(new Address("Van", "Robson", "11555"));
 
+
         Member mmm3 = new Member();
-        mmm3.setName("wonhee");
+        mmm3.setName("ahra");
         mmm3.setAddress(new Address("Seoul", "Madeulro", "31119"));
 
 
         //# 조건 when
-        Long savedId2 = memberService.join(mmm2);
-        Long savedId3 = memberService.join(mmm3); //여기서 반드시 예외가 발생해야 함
+        memberService.join(mmm2); //먼저, 'mmm2 객체'를 DB에 저장한 후, 그 저장한 회원 id값을 그냥 별 뜻 없이 리턴함.
+        memberService.join(mmm3); //이걸 입력할 때 당연히 딱 예외가 발생해야 한다
+
 
 
         //# 검증 then
-        assertEquals(mmm2, memberRepository.findOne(savedId2));
+        fail("중복회원 검증에서 exception이 정상적으로 발생하도록 테스트코드를 설계해서 테스트하는 것이 원래 목적이기에," +
+                "여기 fail문에 도달하기 전에 당연히 exception이 발생했었어야 하는데, 그 exception이 발생하지 않아서" +
+                "여기 fail문까지 도달했으므로, 위에 테스트로직에서 뭔가를 잘못 작성한 것임. 따라서 위에 테스트로직 수정해서" +
+                "중복회원 검증시 exception이 정상적으로 발생하는지 여부 체크되어야 함.");
+        //여기 쓴 그대로, 이 테스트서버 실행해서 여기 fail까지 도달해서 위 'fail문 내부의 긴~ 문장들'이 정상적으로 콘솔에
+        //출력된거라면, 그건 지금 테스트코드를 내가 원래 의도한대로 제대로 작성한 것이 아님.
+        //따라서, 위에 테스트코드 수정해야 함.
 
 
     }
