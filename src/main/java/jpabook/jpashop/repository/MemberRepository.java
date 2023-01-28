@@ -2,17 +2,26 @@ package jpabook.jpashop.repository;
 
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Repository
 public class MemberRepository {
 
-    @PersistenceContext
-    private EntityManager em;
+
+    //[ '회원 서비스 개발'강 16:45~ ]
+    //< 생성자를 통한 의존성 주입 >
+    //'클래스레벨 어노테이션 @RequriedArgsConstructor와 결합하여' 'EntityManger 객체의 의존성 주입'이 가능해진다!
+    private final EntityManager em;
+//    또는
+//    @PersistenceContext //또는 '@Autowired'를 사용하도 무방하다.
+//    private EntityManager em;
 
 
     //저 아래 DB로부터 '회원 조회'하는 작업들 수행하기 위해 일단 그 전제가 되어야 하는 'DB에 회원 저장'하는 작업임

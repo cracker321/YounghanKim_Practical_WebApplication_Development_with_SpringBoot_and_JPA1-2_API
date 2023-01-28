@@ -14,23 +14,29 @@ import java.util.List;
 
 @RequiredArgsConstructor
 //'현재 클래스 MemberService의 내부에 있는 필드들 중에서', '@NonNull' 또는 'final'이
-//붙어있는 필드들을 매개변수로 갖는 생성자를 자동으로 만들어주는 어노테이션임.
+//붙어있는 모든 필드들을 매개변수로 갖는 생성자를 자동으로 만들어주는 어노테이션임.
 //e.g) 아래 필드들 같은 경우,
 //      MemberSerivce memberService(MemberRepository memberRepository, PostService, postService){
 //                  this.memberRepository = memberRepository;
 //                  this.postService = postService;
 //      }
 //위 생성자를 '대신 만들어주는' 어노테이션이 '@RequiredArgsConstructor'이다!!
+//즉, '@RequiredArgsConstructor'와 '필드 private final ...' 또는 '@NonNull이 붙은 필드'가 서로 합쳐져서
+//'생성자를 통한 의존성 주입'이 실현되는 것이다!
 //https://mangkyu.tistory.com/78
 @Transactional(readOnly = true)
 @Service
-public class MemberService {
+public class MemberService { //'테스트 케이스'를 작성할 때는 'MemberService'위에 커서 올려두고
+                             //'Ctrl + Shift + T' 누르면 된다!
 
+   //[ '회원 서비스 개발'강 15:20~ ]
    //< 생성자를 통한 의존성 주입 >
-   //'레펏 MemberRepository'와 '서비스 PostService'를 모두 '의존성 주입'한다.
+   //'@RequiredArgsConstructor'와 합쳐져서 'private final ...'로 되어 있거나 '@NonNull'이 붙어 있는 '모든 필드들'을
+   //'생성자 통한 의존성 주입'시켜준다!
+   //여기서는 '레펏 MemberRepository'와 '서비스 PostService'를 모두 '의존성 주입'한다.
    private final MemberRepository memberRepository;
-   @NonNull
-   private PostService postService; //또는, 'private final MemberRepository memberRepository'라고 써도 됨
+//   @NonNull
+//   private PostService postService; //또는, 'private final MemberRepository memberRepository'라고 써도 됨
 
 
 
@@ -38,7 +44,7 @@ public class MemberService {
 
 
     //개발해야 할 기능
-    //< 회원 가입 >
+    //< 회원가입 >
     //'클라이언트로부터 전달받은 회원가입 하려는 '엔티티 Member 객체''를 '통으로 매개변수에 넣음'.
     @Transactional
     public Long join(Member member){ //[ '회원 서비스 개발'강 03:40~ ]
