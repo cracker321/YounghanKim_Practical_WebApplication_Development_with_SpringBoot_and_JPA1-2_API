@@ -39,8 +39,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 //   private PostService postService; //또는, 'private final MemberRepository memberRepository'라고 써도 됨
 
 
-
-
+//==================================================================================================================
 
 
     //개발해야 할 기능
@@ -68,6 +67,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 
         return member.getId();
     }
+
 
 
     //< '새로 회원가입 하려는 회원과 중복되는 이름이 DB에 이미 있는지 여부'를 검사하는 메소드 >
