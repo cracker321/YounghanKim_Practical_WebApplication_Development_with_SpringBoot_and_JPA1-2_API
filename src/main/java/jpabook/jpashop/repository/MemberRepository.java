@@ -33,9 +33,10 @@ public class MemberRepository {
     //저 아래 DB로부터 '회원 조회'하는 작업들 수행하기 위해 일단 그 전제가 되어야 하는 'DB에 회원 저장'하는 작업임
     //중요한 건 아님. 이 'Member 객체'를 '영속성 컨텍스트'에 넣는 것임.
     //아래처럼 이렇게 저장해주면 이제 DB에 'INSERT 쿼리'가 날라가서, DB에 아래 적히 1명의 member가 저장됨.
-    public void save(Member member){ //이 'Member 객체'를 아래 '영속성 컨텍스트'에 넣을 때,
-                                     //이 'Member 객체 자체'는 'Member 객체의 PK인 id값'으로 인식되어져 버려서,
-                                     //이 'id값'이 영속성 컨텍스트에 저장되는 구조로 애초에 설계되어 있다.
+    public void save(Member member){ //- DB에 저장만 하고 리턴값을 따로 반환해주지 않아도 되니깐, 이 메소드의 자료형은 void임!
+                                     //- 이 'Member 객체'를 아래 '영속성 컨텍스트'에 넣을 때,
+                                     //  이 'Member 객체 자체'는 'Member 객체의 PK인 id값'으로 인식되어져 버려서,
+                                     //  이 'id값'이 영속성 컨텍스트에 저장되는 구조로 애초에 설계되어 있다.
 
         em.persist(member);
     }
