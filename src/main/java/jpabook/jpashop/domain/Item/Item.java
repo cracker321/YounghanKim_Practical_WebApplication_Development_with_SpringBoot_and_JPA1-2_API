@@ -2,6 +2,7 @@ package jpabook.jpashop.domain.Item;
 
 
 import jpabook.jpashop.domain.CategoryItem;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,5 +59,30 @@ public abstract class Item { //[ '엔티티 클래스 개발1'강 19:04~ ]
     private List<CategoryItem> categoryItems = new ArrayList<>();
 
 
+//================================================================================================================
+
+
+    //[ '상품 엔티티 개발(비즈니스 로직 추가)'강. 01:20~ ]
+    //< 재고 수량을 증가시키는 로직 >
+    //- 현재 클래스가 엔티티 객체이지만, 비즈니스 로직을 넣어줌
+    //  왜냐하면, 아래 '재고수량 데이터(필드) stockQuantity'가 바로 여기 '현재 Item 객체' 안에 존재하고 있기 때문에,
+    //  이 안에서 다 처리해주는 것이 보다 응집력이 있고 객체지향적임
+    //  즉, '데이터(필드 stockQuantity)를 가지고 있는 현재 Item 객체' 내부에 '비즈니스 로직'을 넣는 것이 합리적이다!
+    public void addStock(int quantity){
+
+        this.stockQuantity += quantity; //'this.stockQuantity = this.stockQuantity + quantity'와 동일하다!
+                                        //https://www.codeit.kr/community/threads/10945
+            }
+
+    //< 재고 수량을 감소시키는 로직 >
+    //단, 재고가 0 아래로 내려갈 수 없다는 if 로직을 넣어줘야 함
+    public void removeStock(int quantity){
+        int restStock = this.stockQuantity - quantity;
+        if(restStock < 0){
+                throw new NotEnoughStockException("재고가 0 아래로 내려갈 수 없습니다");
+        } //이 if문 체크를 통과하면
+        this.stockQuantity = restStock; //이렇게 설정해주면 됨
+
+    }
 
 }
