@@ -12,15 +12,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class SaveTest {
 
-    @Autowired
-    Team team;
-
-    public void testSave(){
-
-        Team team1 = new Team("team1", "팀1");
-
-
-    }
+//    @Autowired
+//    Team team;
+//
+//    public void testSave(){
+//
+//        Team team1 = new Team("team1", "팀1");
+//
+//
+//    }
 
     //전제 given
 

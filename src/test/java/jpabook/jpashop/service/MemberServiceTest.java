@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,14 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+@Transactional //'테스트 케이스일 경우에서 사용되는 '@Transactional''은 기본적으로 'SQL 쿼리문을 DB로 커밋 안 하고, 롤백을 해버린다'.
+               //즉, 이건 테스트코드이기에 당연히 DB로 'INSERT ...' 이런 쿼리문을 애초에 날리지 않고, 다시 롤백해버린다.
+               //그럼에도 만약 내가 '롤백하지 않고 최종 커밋한 결과를 보고 싶다면', '해당 테스트 메소드 위에 '@Rollback(false)'를 넣는다!
+               //'해당 테스트 메소드 위에 '@Rollback(false)'를 넣으면', 현재 이 테스트를 실행시켰을 때 롤백하지 않은 최종 커밋 결과를
+               //볼 수 있다.
+               //즉, 이 테스트 코드를 실행시킨 후 뜨는 콘솔창에, 마치 테스트코드가 아닌 실제 정상 서버에서 작성한 코드를 실행시킨
+               //것처럼, 'DB로 쿼리문('INSERT ...' 등)을 날리고 그 쿼리문 자체를 콘솔창에 보여준다!!'
+               //cf) 당연히, 테스트코드이기에 정말 실제로 DB에 쿼리문이 날라가서 반영되는 것은 아닌 것 같긴 한데..이거 확실히 알기!
 public class MemberServiceTest {
 
     @Autowired
@@ -25,6 +33,7 @@ public class MemberServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Rollback(false)
     @Test
     public void 회원가입_정상적으로_되는지() throws Exception{
 
@@ -52,7 +61,9 @@ public class MemberServiceTest {
         //- 'mmm': 'Memeber 객체의 id값'
         //- 'memberRepository.findOne(savedId)': '레펏 MemberRepository'가 'DB로부터 찾아온 id값'
         //위 두 개의 리턴값(결괏값)이 같은지 여부를 검증하는 것!
-        Assert.assertEquals(mmm, memberRepository.findOne(savedId));
+        assertEquals(mmm, memberRepository.findOne(savedId));
+        //= Assert.assertEquals(mmm, memberRepository.findOne(savedId));
+        //그냥 'Assert'는 생략 가능한 듯..?
 
 
 
