@@ -122,7 +122,7 @@ public class Order {
         order.setDelivery(delivery); //'현재 Order 객체에 (주문된 상품의)배송 정보(속성)을 추가함'.
 
 
-        for() //04:06~
+
 
 
 
