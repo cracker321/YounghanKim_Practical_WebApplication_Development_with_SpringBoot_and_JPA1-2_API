@@ -64,6 +64,7 @@ public class Order {
 
 
     //[ '엔티티 설계시 주의점'강. 22:50~ ]. 더 확인하기!
+
     //< 연관관계 편의 메소드1 > : '양방향 매핑'일 때 사용하는 것!
     //'주인인 Order 객체(N)'와 '주인이 아닌 Member 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
     public void changeMember(Member m){
@@ -82,13 +83,13 @@ public class Order {
 //=============================================================================================================
 
 
-//    //< 연관관계 편의 메소드2 >
-//    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
-//    public void addOrderItem(OrderItem oi){
-//
-//        orderItems.add(oi); //
-//        oi.setOrder(this); //'OrderItem 객체의 속성'으로 'Order 객체 this..이거 더 확인하기!'를 넣어줌.
-//    }
+    //< 연관관계 편의 메소드2 >
+    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
+    public void addOrderItem(OrderItem oi){
+
+        orderItems.add(oi); //기존의 '주문상품 리스트 OrderItems 객체'에 '새롭게 하나의 주문상품 OrderItem 객체'를 추가함.
+        oi.setOrder(this); //'OrderItem 객체의 속성'으로 'Order 객체 this..이거 더 확인하기!'를 넣어줌.
+    }
 
 
 //=============================================================================================================
@@ -112,6 +113,7 @@ public class Order {
 
 
     //[ '주문, 주문상품 엔티티 개발'강. 02:10~ ]
+
     //< 주문 생성 메소드 >
     //'주문된 상품 을 생성하려면', '주문한 회원 정보 Member', '주문된 상품의 배송 정보 Delivery',
     //'주문한 상품들 OrderItem...'의 정보가 모두 필요하다!
@@ -122,51 +124,20 @@ public class Order {
         order.setDelivery(delivery); //'현재 Order 객체에 (주문된 상품의)배송 정보(속성)을 추가함'.
 
 
+        //[ '주문, 주문상품 엔티티 개발'강. 03:30~ ]
+        //'신규 주문으로 들어온 주문상품 OrderItem 객체'를  '주문 Ordr 객
+        for(OrderItem orderItem : orderItems){
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER); //일단은 '주문상태 OrderStatus의 최초설정'을 'ORDER'로 '강제 설정'함
+        order.setOrderDate(LocalDateTime.now()); //일단은 '주문시각 LocalDateTime의 최초설정'을 '현재시간 now'로 '강제 설정'함
 
-
-
-
-
-        return null;
+        return order;
     }
-
-
 
 
 //=============================================================================================================
 
-
-//    //< 연관관계 편의 메소드2 >
-//    //'Order 객체(1)'와 'OrderItem 객체(N)' 연관관계에서 '주인이 아닌 Order 객체'의 입장
-//    public void addOrderItem(OrderItems oi){
-//
-//        if(oderItems != null){
-//            this.orderItems.getOrder
-//        }
-//
-//
-//
-//    }
-
-
-
-
-
-//
-//    //< 연관관계 편의 메소드2 >
-//    public void addOrderItem(OrderItem oi){
-//
-//        orderItems.add(oi); //
-//        oi.setOrder(this); //'OrderItem 객체의 속성'으로 'Order 객체 this..이거 더 확인하기!'를 넣어줌.
-//    }
-//
-//
-//    //< 연관관계 편의 메소드3 >
-//    public void setDelivery(Delivery d){
-//
-//        this.delivery = d;
-//        d.setOrder(this);
-//    }
 
 
 
