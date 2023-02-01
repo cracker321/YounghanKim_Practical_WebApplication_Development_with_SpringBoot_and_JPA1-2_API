@@ -115,7 +115,8 @@ public class Order {
 
     //[ '주문, 주문상품 엔티티 개발'강. 02:10~ ]
 
-    //< 주문 생성 메소드 >
+    //< '주문 생성' 메소드. 상세설명파트 11:10~ >
+
     //'주문된 상품 을 생성하려면', '주문한 회원 정보 Member', '주문된 상품의 배송 정보 Delivery',
     //'주문한 상품들 OrderItem...'의 정보가 모두 필요하다!
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){ //'... 문법'!
@@ -177,11 +178,17 @@ public class Order {
     public int getTotalPrice(){
 
         int totalPrice = 0;
-        for(OrderItem orderItem : orderItems){
 
+        for(OrderItem orderItem : orderItems){
             totalPrice += orderItem.getTotalPrice();
         }
         return totalPrice;
+
+        //위 for문을 스트림으로 바꿔 아래처럼 작성할 수 있다!
+//       return orderItems.stream()
+//               .mapToInt(OrderItem::getTotalPrice)
+//               .sum();
+
     }
 
 
@@ -189,6 +196,10 @@ public class Order {
 //=============================================================================================================
 
 
+
+
+
+//=============================================================================================================
 
 
 
