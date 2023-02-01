@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 
+import jpabook.jpashop.domain.Item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -119,13 +120,16 @@ public class Order {
     //'주문한 상품들 OrderItem...'의 정보가 모두 필요하다!
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){ //'... 문법'!
 
-        Order order = new Order(); //'엔티티 Order'를 사용하기 위해, 여기서 'Order 객체를 생성해줌'.
+        Order order = new Order(); //- '엔티티 Order'를 사용하기 위해, 여기서 'Order 객체를 생성해줌'.
+                                   //  여기서 '엔티티 Order 객체를 만들지 않으면', 아래에서 'Order 객체를 사용할 수 없게 됨'.
+                                   //- 내 개인적인 생각이긴 한데, 만약 아래 리턴값이 order여야만 하지 않았다면,
+                                   //  'Order 객체'를 만드는 대신, 'this'를 사용해도 괜찮은 것 아닌가..?
         order.setMember(member); //'현재 Order 객체에 (주문한)특정 회원 정보(속성)을 추가함'.
         order.setDelivery(delivery); //'현재 Order 객체에 (주문된 상품의)배송 정보(속성)을 추가함'.
 
 
         //[ '주문, 주문상품 엔티티 개발'강. 03:30~ ]
-        //'신규 주문으로 들어온 주문상품 OrderItem 객체'를  '주문 Ordr 객
+        //'신규 주문으로 들어온 주문상품 OrderItem 객체'를  '주문 Order 객체'에 '집어넣음'.
         for(OrderItem orderItem : orderItems){
             order.addOrderItem(orderItem);
         }
@@ -139,6 +143,8 @@ public class Order {
 //=============================================================================================================
 
 
+    //============= 비즈니스로직 =============('=' 13개)
+
     //[ '주문, 주문상품 엔티티 개발'강. 04:55~ ]
 
     //< '주문 취소' 비즈니스 로직. 05:15~ >
@@ -146,15 +152,37 @@ public class Order {
         if(delivery.getStatus() == DeliveryStatus.COMP){ //'배송이 이미 예전에 다 완료되어서 주문취소가 불가능한 경우'라면
             throw new IllegalStateException("이미 배송 완료된 상품은 주문취소가 불가능합니다잉!!");
         }
+        this.setStatus(OrderStatus.CANCEL);
 
 
+        for(OrderItem orderItem : this.orderItems){ //- '주문이 취소되었기 때문'에, '기존의 재고를 원래대로 복구시킴( +1 시킴)'.
+                                                    //- 여기서 'this.orderItems' = 'orderItems' 임.
+                                                    //- 'for문에 돌려지는 객체는 당연히 리스트 등 여러 개가 속해 있는 컬렉션이다!'
+            //< 주문상품에 대한 주문취소. 07:00~ >
+            orderItem.cancel(); //고객이 '하나의 건 주문할 때('Order 객체' 호출)', 그 하나의 건 주문 안에는 'N개의
+                                //주문상품 OrderItem'이 있을 수 있기 때문에, for문을 돌려서 그 하나의 건 주문 안에 있는
+                                //'N개의 모든 주문상품들 OrderItem 취소(메소드 cancel)시켜야 함'.
+        }
     }
-
-
 
 
 //=============================================================================================================
 
+
+    //============= 조회 로직 =============
+
+    //[ '주문, 주문상품 엔티티 개발'강. 09:00~ ]
+
+    //< 해당 하나의 주문 건에 속한 총 주문상품들의 총 주문금액 합 조회 >
+    public int getTotalPrice(){
+
+        int totalPrice = 0;
+        for(OrderItem orderItem : orderItems){
+
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
 
 
 
