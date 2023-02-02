@@ -16,7 +16,7 @@ import java.util.List;
 //'현재 클래스 MemberService의 내부에 있는 필드들 중에서', '@NonNull' 또는 'final'이
 //붙어있는 모든 필드들을 매개변수로 갖는 생성자를 자동으로 만들어주는 어노테이션임.
 //e.g) 아래 필드들 같은 경우,
-//      MemberSerivce memberService(MemberRepository memberRepository, PostService, postService){
+//      MemberService memberService(MemberRepository memberRepository, PostService, postService){
 //                  this.memberRepository = memberRepository;
 //                  this.postService = postService;
 //      }
@@ -77,7 +77,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
     //< '새로 회원가입 하려는 회원과 중복되는 이름이 DB에 이미 있는지 여부'를 검사하는 메소드 >
     private void validateDuplicateMember(Member member){
 
-        //'레펏 MemberRepsoitory'를 호출하여, '클라이언트로부터 들어온 새로운 회원 이름(member.getName())'이
+        //'레펏 MemberRepository'를 호출하여, '클라이언트로부터 들어온 새로운 회원 이름(member.getName())'이
         //DB에 이미 있는지 여부 확인하기. 있다면 '변수 findMembers'에 담아서 '서비스'로 가져오는 것
         List<Member> findMembers = memberRepository.findByName(member.getName());
 
@@ -89,6 +89,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 
 
 //=====================================================================================================
+
 
     //< 전체 회원 조회 >
     //@Transactional(readOnly = true) //- '조회'를 수행할 때, '읽기 전용 트랜잭션 @Transactional(readOnly = true)'
@@ -113,6 +114,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
         return members;
     }
 
+
 //=====================================================================================================
 
 
@@ -129,6 +131,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
     }
 
     //'회원 서비스 개발'강 06:14~
+
 
 //=====================================================================================================
 
