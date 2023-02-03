@@ -37,13 +37,19 @@ public class Order {
     //- '주인이 아닌 객체(1. 여기 'Order 객체')'가 '주인 객체(N. 저기 'OrderItem 객체')'를
     //  '종속시켜 관리하기' 때문에, '주인이 아닌 객체(여기 'Order 객체')'의 내부 필드에
     //  'cascade'를 작성하는 것이다!
+    //  cf)'주문 서비스 개발'강. 05:25~
     //- 만약, 'Order 객체'가 'OrderItem 객체'를 '종속시켜 관리하는 상황이 아니라면', 즉, 'OrderItem 객체가 되게 중요해서
     //  다른 엔티티 객체들과도 서로 얽히고 많이 연관되어 있어서 다른 엔티티 객체에서도 OrderItem 객체를 가져와서 막 연결시키고
     //  그런 상황이라면', '그럴 때는 여기서 Cascade를 남용해서 사용하면 안된다!
+    //  왜냐하면, 'Order 객체 또는 OrderItem 객체와 연관되어 있는 어떤 다른 엔티티 객체가 Order 객체 또는 OrderItem 객체를
+    //  삭제하거나 변경시키거나 할 경우', 'Order 객체와 OrderItem 객체는 서로 연관되어 있기에 이로부터 동시에 같이 삭제되거나
+    //  변경되는 불상사가 일어나기 때문이다!'
+    //  그냥, 딱 '현재의 Order 객체와 OrderItem 객체 간 관계' 정도에서나 쓰는 것임.
     //- 따라서, '만약 '서비스 OrderService 등'에서 'Order 객체를 영속화 persist 시킨다면'',
     //  '그와 동시에 OrderItem 객체도 같이 자동으로 영속화됨!'
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+
 
 
     //'주인 객체'는 '현재 객체인 Order 객체'임
@@ -56,9 +62,14 @@ public class Order {
     //  여기 'Order 객체와 Delivery 객체 간의 관계에서,
     //  '주문 Order'가 발생해야, 그에 이어져서 '배송 Delivery'라는 사건이 발생하므로,
     //  'Order 객체'가 'Delivery 객체'를 종속하고 있고, 그에 따라, 'Order 객체 내부의 필드'에 'Cascade를 붙은 것'이다!
+    //  cf)'주문 서비스 개발'강. 05:25~
     //- 만약, 'Order 객체'가 'Delivery 객체'를 '종속시켜 관리하는 상황이 아니라면', 즉, 'Delivery 객체가 되게 중요해서
     //  다른 엔티티 객체들과도 서로 얽히고 많이 연관되어 있어서 다른 엔티티 객체에서도 Delivery 객체를 가져와서 막 연결시키고
-    //  그런 상황이라면', '그럴 때는 여기서 Cascade를 남용해서 사용하면 안된
+    //  그런 상황이라면', '그럴 때는 여기서 Cascade를 남용해서 사용하면 안된다!
+    //  왜냐하면, 'Order 객체 또는 Delivery 객체와 연관되어 있는 어떤 다른 엔티티 객체가 Order 객체 또는 Delivery 객체를
+    //  삭제하거나 변경시키거나 할 경우', 'Order 객체와 Delivery 객체는 서로 연관되어 있기에 이로부터 동시에 같이 삭제되거나
+    //  변경되는 불상사가 일어나기 때문이다!'
+    //  그냥, 딱 '현재의 Order 객체와 Delivery 객체 간 관계' 정도에서나 쓰는 것임.
     //- 따라서, '만약 '서비스 OrderService 등'에서 'Order 객체를 영속화 persist 시킨다면'',
     //  '그와 동시에 Delivery 객체도 같이 자동으로 영속화됨!'
 

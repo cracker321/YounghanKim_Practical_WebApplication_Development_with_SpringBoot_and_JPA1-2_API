@@ -18,6 +18,14 @@ import static jpabook.jpashop.domain.DeliveryStatus.READY;
 @Service
 public class OrderService {
 
+
+
+//=================================================================================================================
+
+
+    //바로 아래 '< 신규주문 저장 >'에서 사용된 'memberRepository.findOne(memberId)'와 'itemRepository.findOne(itemId)'를
+    //사용하기 위해 아래에서 '레펏 OrderRepository'와 '레펏 ItemRepository'를 '의존성주입 DI로 가져옴'.
+
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
@@ -46,8 +54,33 @@ public class OrderService {
 
 
         //3.주문상품 생성. '주문 서비스 개발'강. 02:50~
+        //- '엔티티 OrderItem 객체'와 같은 '엔티티 객체'는 'public이기 떄문에 다른 외부 클래스에서 자유롭게 사용 가능!'
+
+        //  '주문 서비스 개발'강. 09:10~
+        //- 아래의 '생성자와 동일한 역할을 하는 생성자 기능 신규주문 생성 메소드 createOrderItem을 사용(호출)하여 만든
+        //  'OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count)'는
+        //  바로 아래 로직과 똑같다.
+        //  바로 아래 로직처럼 하거나 '생성자와 동일한 역할을 하는 생성자 기능 신규주문 생성 메소드 createOrderItem을 사용(호출)하여
+        //  만든 'OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count)'를 사용하거나
+        //  둘 중 하나의 스타일만 사용해야 함. 그래야 나중에 혼란스럽지 않고 유지보수하기 편함
+        //  여기서는, '생성자와 동일한 역할을 하는 생성자 기능..'을 사용하기로 했으니,
+        //  이제 바로 아래 로직처럼 'new OrderItem 만들어서 하는 스타일'은 사용하면 안됨.
+        //  개발은 혼자 하는 것이 아니라, 다른 개발자들도 같이 협업하면서 하기 때문에, 다른 개발자들이 혹시라도
+        //  'new OrderItem 만들어서 하는 스타일'을 사용하지 않도록(못하도록)
+        //  'OrderItem 객체 내부'에
+        //  'protected OrderItem(){
+        //      }'
+        //  를 넣어줘서 그 스타일 사용을 막아야(protect) 한다! 이렇게 하게 되면, 바로 아래에서 'new OrderItem'을 쓴다면
+        //  바로 컴파일 에러남.
+        //  참고로, 바로 위 'protected OrderItem(){}'는 '클래스 OrderItem의 맨 위에 클래서 어노테이션
+        //  @NoAragsConstructor(access = AccessLevel.PROTECTED'를 붙이면 동일한 기능이 되게 된다.
+        /*
+        OrderItem orderItem1 = new OrderItem();
+        orderItem1.setItem(item);
+        orderItem1.setOrderPrice(item.getPrice());
+        orderItem1.setCount(count);
+        */
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
-                //- '엔티티 OrderItem 객체'와 같은 '엔티티 객체'는 'public이기 떄문에 다른 외부 클래스에서 자유롭게 사용 가능!'
 
 
         //4.(위 1~3번 과정을 바탕으로)신규주문 생성. '주문 서비스 개발'강. 03:25~
@@ -58,8 +91,6 @@ public class OrderService {
         orderRepository.save(order); //여기서 'Order 객체를 DB에 영속화 persist 시킨다면', 'Order 객체와 Cascade 관계 되어있는
                                      //'OrderItem 객체('엔티티 Order' 참조)', 'Delivery 객체('엔티티 Delivery' 참조)'도
                                      //'그와 동시에 DB에 영속화 persist 된다!'.
-
-
 
         return order.getId(); //05:10~
     }

@@ -2,11 +2,14 @@ package jpabook.jpashop.domain;
 
 
 import jpabook.jpashop.domain.Item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //아래 중간 즈음에 있는 'protected OrderItem(){}' 부분을 대신해서 붙여줌.
 @Getter
 @Setter
 @Entity
@@ -28,6 +31,18 @@ public class OrderItem {
     private int orderPrice; //고객이 주문하는 당시의 가격
 
     private int count; //주문 수량
+
+//==================================================================================================================
+
+
+    //'주문 서비스 개발'강. 09:10~
+
+    //''서비스 OrderService 내부'의 '< 신규주문 저장 > 내부'의 '3.주문상품 생성' 부분 참조'
+    //'protected OrderItem(){}'는 '클래스 OrderItem의 맨 위에 클래스 어노테이션
+    //@NoAragsConstructor(access = AccessLevel.PROTECTED'를 붙이면 동일한 기능이 되게 된다.
+//    protected OrderItem(){
+//
+//    }
 
 
 //==================================================================================================================
