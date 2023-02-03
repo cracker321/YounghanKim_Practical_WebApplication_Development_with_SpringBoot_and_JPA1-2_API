@@ -33,11 +33,16 @@ public class Order {
     private Member member; //'클래스 Member의 필드 id'를 '참조한 필드'
 
 
-    //'주인 객체'는 '저쪽 객체인 OrderItem 객체'임
+    //- '주인 객체'는 '저쪽 객체인 OrderItem 객체'임
+    //- '주인이 아닌 객체(1. 여기 'Order 객체')'가 '주인 객체(N. 저기 'OrderItem 객체')'를
+    //  '종속시켜 관리하기' 때문에, '주인이 아닌 객체(여기 'Order 객체')'의 내부 필드에
+    //  'cascade'를 작성하는 것이다!
+    //- 만약, 'Order 객체'가 'OrderItem 객체'를 '종속시켜 관리하는 상황이 아니라면', 즉, 'OrderItem 객체가 되게 중요해서
+    //  다른 엔티티 객체들과도 서로 얽히고 많이 연관되어 있어서 다른 엔티티 객체에서도 OrderItem 객체를 가져와서 막 연결시키고
+    //  그런 상황이라면', '그럴 때는 여기서 Cascade를 남용해서 사용하면 안된다!
+    //- 따라서, '만약 '서비스 OrderService 등'에서 'Order 객체를 영속화 persist 시킨다면'',
+    //  '그와 동시에 OrderItem 객체도 같이 자동으로 영속화됨!'
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    //'주인이 아닌 객체(1. 여기 'Order 객체')'가 '주인 객체(N. 저기 'OrderItem 객체')'를
-    //'종속시켜 관리하기' 때문에, '주인이 아닌 객체(여기 'Order 객체')'의 내부 필드에
-    //'cascade'를 작성하는 것이다!
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
@@ -45,12 +50,18 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     //- '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로, 반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
     //- 'cascade = CascadeType.PERSIST':
-    //'1:1 양방향 매핑'에서는 꼭 반드시 '주인이 아닌 객체('Delivery 객체')의 내부 필드'에 'cascade'를 쓰는 것은 아니고,
-    //(여기서는 'Order 객체 = 주인 객체', 'Delivery 객체 = 주인이 아닌 객체')
-    //'더 상위 객체(하위 객체를 종속시켜 관리하는 객체)'에 Cascade를 붙이는 것이다!
-    //여기 'Order 객체와 Delivery 객체 간의 관계에서,
-    //'주문 Order'가 발생해야, 그에 이어져서 '배송 Delivery'라는 사건이 발생하므로,
-    //'Order 객체'가 'Delivery 객체'를 종속하고 있고, 그에 따라, 'Order 객체 내부의 필드'에 'Cascade를 붙은 것'이다!
+    //  '1:1 양방향 매핑'에서는 꼭 반드시 '주인이 아닌 객체('Delivery 객체')의 내부 필드'에 'cascade'를 쓰는 것은 아니고,
+    //  (여기서는 'Order 객체 = 주인 객체', 'Delivery 객체 = 주인이 아닌 객체')
+    //  '더 상위 객체(하위 객체를 종속시켜 관리하는 객체)'에 Cascade를 붙이는 것이다!
+    //  여기 'Order 객체와 Delivery 객체 간의 관계에서,
+    //  '주문 Order'가 발생해야, 그에 이어져서 '배송 Delivery'라는 사건이 발생하므로,
+    //  'Order 객체'가 'Delivery 객체'를 종속하고 있고, 그에 따라, 'Order 객체 내부의 필드'에 'Cascade를 붙은 것'이다!
+    //- 만약, 'Order 객체'가 'Delivery 객체'를 '종속시켜 관리하는 상황이 아니라면', 즉, 'Delivery 객체가 되게 중요해서
+    //  다른 엔티티 객체들과도 서로 얽히고 많이 연관되어 있어서 다른 엔티티 객체에서도 Delivery 객체를 가져와서 막 연결시키고
+    //  그런 상황이라면', '그럴 때는 여기서 Cascade를 남용해서 사용하면 안된
+    //- 따라서, '만약 '서비스 OrderService 등'에서 'Order 객체를 영속화 persist 시킨다면'',
+    //  '그와 동시에 Delivery 객체도 같이 자동으로 영속화됨!'
+
     @JoinColumn(name = "DELIEVERY_ID") //'주인이 아닌 테이블 DELIEVERY의 PK 컬럼인 DELIVERY_ID'
                                        //= '주인 테이블(현재 테이블) ORDERS의 FK 컬럼인 DELIVERY_ID'
     private Delivery delivery; //'클래스 Delivery의 필드 id'를 '참조한 필드'

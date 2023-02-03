@@ -1,11 +1,8 @@
 package jpabook.jpashop.service;
 
 
-import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Delivery;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.Item.Item;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
@@ -47,7 +44,24 @@ public class OrderService {
         Delivery delivery = new Delivery();
         delivery.setAddress(member.getAddress());
 
-        return null;
+
+        //3.주문상품 생성. '주문 서비스 개발'강. 02:50~
+        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
+                //- '엔티티 OrderItem 객체'와 같은 '엔티티 객체'는 'public이기 떄문에 다른 외부 클래스에서 자유롭게 사용 가능!'
+
+
+        //4.(위 1~3번 과정을 바탕으로)신규주문 생성. '주문 서비스 개발'강. 03:25~
+        Order order = Order.createOrder(member, delivery, orderItem);
+
+
+        //5.위 4번에서 생성된 신규주문을 DB에 저장하기. '주문 서비스 개발'강. 04:02~
+        orderRepository.save(order); //여기서 'Order 객체를 DB에 영속화 persist 시킨다면', 'Order 객체와 Cascade 관계 되어있는
+                                     //'OrderItem 객체('엔티티 Order' 참조)', 'Delivery 객체('엔티티 Delivery' 참조)'도
+                                     //'그와 동시에 DB에 영속화 persist 된다!'.
+
+
+
+        return order.getId(); //05:10~
     }
 
 
