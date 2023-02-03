@@ -107,14 +107,17 @@ public class OrderService {
 //=================================================================================================================
 
 
-    //< 주문 취소 >
+    //< 주문 취소 >. '주문 서비스 개발'강. 11:30~.
     //
     @Transactional
-    public void cancelOrder(Order oder){
+    public void cancelOrder(Long orderId){ //여기서 '매개변수 orderId'는 그냥 여기서 메소드 안에서만 사용할 수 있는
+                                           //내가 임의로 정한 매개변수임.
 
-        orderRepository.
-
-    //'주문 서비스 개발'강. 11:42~
+        //취소할 주문 조회
+        Order order = orderRepository.findOne(orderId);
+        
+        //해당 주문 취소
+        order.cancel();
 
     }
 

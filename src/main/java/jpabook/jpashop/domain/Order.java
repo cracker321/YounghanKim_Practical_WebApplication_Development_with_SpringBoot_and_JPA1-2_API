@@ -178,15 +178,15 @@ public class Order {
 
     //[ '주문, 주문상품 엔티티 개발'강. 04:55~ ]
 
-    //< '기존주문 취소' 비즈니스 로직. 05:15~ >
+    //< 기존주문 취소 >. '주문, 주문상품 엔티티 개발'강. 05:15~. '서비스 OrderService'에서 사용됨.
     public void cancel(){
         if(delivery.getStatus() == DeliveryStatus.COMP){ //'배송이 이미 예전에 다 완료되어서 주문취소가 불가능한 경우'라면
             throw new IllegalStateException("이미 배송 완료된 상품은 주문취소가 불가능합니다잉!!");
         }
-        this.setStatus(OrderStatus.CANCEL);
+        this.setStatus(OrderStatus.CANCEL); //'취소되어야 하는 주문의 상태'를 이제 'CANCEL'로 바꿈
 
 
-        for(OrderItem orderItem : this.orderItems){ //- '주문이 취소되었기 때문'에, '기존의 재고를 원래대로 복구시킴( +1 시킴)'.
+        for(OrderItem orderItem : this.orderItems){ //- '기존주문이 취소되었기 때문'에, '기존재고를 원래대로 복구시킴(+1 시킴)'.
                                                     //- 여기서 'this.orderItems' = 'orderItems' 임.
                                                     //- 'for문에 돌려지는 객체는 당연히 리스트 등 여러 개가 속해 있는 컬렉션이다!'
             //< 주문상품에 대한 주문취소. 07:00~ >
