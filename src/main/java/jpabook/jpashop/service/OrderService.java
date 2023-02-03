@@ -55,9 +55,8 @@ public class OrderService {
 
         //3.주문상품 생성. '주문 서비스 개발'강. 02:50~
         //- '엔티티 OrderItem 객체'와 같은 '엔티티 객체'는 'public이기 떄문에 다른 외부 클래스에서 자유롭게 사용 가능!'
-
-        //  '주문 서비스 개발'강. 09:10~
-        //- 아래의 '생성자와 동일한 역할을 하는 생성자 기능 신규주문 생성 메소드 createOrderItem을 사용(호출)하여 만든
+        //- '주문 서비스 개발'강. 09:10~
+        //  아래의 '생성자와 동일한 역할을 하는 생성자 기능 신규주문 생성 메소드 createOrderItem을 사용(호출)하여 만든
         //  'OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count)'는
         //  바로 아래 로직과 똑같다.
         //  바로 아래 로직처럼 하거나 '생성자와 동일한 역할을 하는 생성자 기능 신규주문 생성 메소드 createOrderItem을 사용(호출)하여
@@ -75,15 +74,24 @@ public class OrderService {
         //  참고로, 바로 위 'protected OrderItem(){}'는 '클래스 OrderItem의 맨 위에 클래서 어노테이션
         //  @NoAragsConstructor(access = AccessLevel.PROTECTED'를 붙이면 동일한 기능이 되게 된다.
         /*
-        OrderItem orderItem1 = new OrderItem();
-        orderItem1.setItem(item);
-        orderItem1.setOrderPrice(item.getPrice());
-        orderItem1.setCount(count);
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setOrderPrice(item.getPrice());
+        orderItem.setCount(count);
         */
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
 
 
         //4.(위 1~3번 과정을 바탕으로)신규주문 생성. '주문 서비스 개발'강. 03:25~
+        //- 이것도 3번과 마찬가지로
+        /*
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        order.getOrderItems().add(orderItem);
+        */
+        //위에 로직처럼 해 줄 수 있으나, 아래 스타일처럼 하기로 내가 결정했으니, ...
+
         Order order = Order.createOrder(member, delivery, orderItem);
 
 
@@ -101,13 +109,13 @@ public class OrderService {
 
     //< 주문 취소 >
     //
-    public Order cancelOrder(Order oder){
+    @Transactional
+    public void cancelOrder(Order oder){
 
         orderRepository.
 
+    //'주문 서비스 개발'강. 11:42~
 
-
-        return null;
     }
 
 
