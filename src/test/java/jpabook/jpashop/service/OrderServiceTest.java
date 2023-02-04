@@ -74,12 +74,24 @@ public class OrderServiceTest {
 
         //# 조건 when
         //바로 위에서 작성한 '테스트코드용 회원 Member객체의 속성'과 '테스트코드용 책 Book 객체의 속성'을 불러옴
-        orderService.order(member.getId(), book.getId(), 2); //테스트코드용으로 2권 주문하기로 함
+        //'서비스 OrderService의 메소드 order의 리턴타입'으로 단순 식별 목적으로 '자료형 Long'을 해줬기 때문에,
+        //여기서 '변수 testOrderId'를 만들어서 그것에 넣어줄 때 '변수 testOrderId의 자료형을 Long 타입'으로 해주는 것이 가능하다!
+        Long testOrderId = orderService.order(member.getId(), book.getId(), 2); //테스트코드용으로 2권 주문하기로 함
 
 
 
         //# 검증 then
-        orderRepository.findOne(); //'레펏 OrderRepository의 메소드 findOne'은 현재 'DB에 있는 데이터를 가져오는 기능!'
+        Order getOrder = orderRepository.findOne(testOrderId);
+        //- '레펏 OrderRepository의 메소드 findOne'은 현재 'DB에 있는 데이터를 가져오는 기능!'
+        //- '레펏 OrderRepsoitory의 메소드 findOne의 매개변수 orderId'는 그냥 그 메소드에서만 통용되는 매개변수에 불과하고,
+        //  중요한 것은, '레펏 OrderRepsitory의 메소드 findOne을 호출할 때는',
+        //  반드시 '그 매개변수로 매개변수 orderId의 자료형인 Long 타입'을 넣어주어야 하는 것이다!
+        //- 여기서 '메소드 findOne을 호출할 때 넣는 매개변수'는 당연히 '여기 테스트코드의 '메소드
+        //  신규상품_책_주문이_정상적으로_작동되는지()'에서 정의된 변수'만 가능하다!
+
+
+
+
 
     }
 
