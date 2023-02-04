@@ -118,7 +118,8 @@ public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코
 
         //취소할 주문 조회
         Order order = orderRepository.findOne(orderId);
-        
+
+
         //해당 주문 취소
         order.cancel();
 

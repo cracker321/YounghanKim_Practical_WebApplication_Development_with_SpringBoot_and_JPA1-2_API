@@ -68,7 +68,8 @@ public class MemberServiceTest {
     @Rollback(false)
     @Test
     public void 회원가입_정상적으로_되는지() throws Exception{
-
+    //테스트케이스에서 현재 메소드 내부에서 'ctrl + shift + T' 누르면,
+    //'현재 메소드와 연관되어 있는 메인 애플리케이션의 해당 부분'으로 이동이 가능함
 
         //# 전제 given
         //'새로운 하나의 Member 객체를 생성'함.
