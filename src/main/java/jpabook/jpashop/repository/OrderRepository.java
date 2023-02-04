@@ -47,11 +47,11 @@ public class OrderRepository {
 
     //[ '주문 리포지토리 개발'강. 01:00~ ]
     //< 전체 주문 조회 >
-    public List<Order> findAll(OrderSearch orderSearch){
-
-        return null;
-
-    }
+//    public List<Order> findAll(OrderSearch orderSearch){
+//
+//        return null;
+//
+//    }
 
 
 

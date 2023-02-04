@@ -13,6 +13,5 @@ public abstract class BaseEntity { //'클래스 BaseEntity'는 '객체화시켜 
     @Id
     @GeneratedValue
     private Long id;
-
     private String name;
 }

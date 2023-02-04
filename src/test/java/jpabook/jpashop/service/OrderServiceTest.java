@@ -6,6 +6,7 @@ import jpabook.jpashop.domain.Item.Item;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import jpabook.jpashop.repository.OrderRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,8 +60,11 @@ public class OrderServiceTest {
 
         //'주문할 테스트코드용 회원 Member 객체'를 생성해줌
         Member member = new Member();
-        member.setName("yujnog");
+        member.setName("yujong"); //'자료형 String 타입'
         member.setAddress(new Address("Seoul", "Dobong-gu", "01336"));
+        //'클래스 Member의 필드 Address(private Address address)'는,
+        //'자료형 Address '객체타입''이기에, 당연히 'Address 객체'를 사용할 때는 당연히 '새로운 객체 생성하는 객체 타입'으로만
+        //사용하는 것이 가능한 것임.
         em.persist(member);
 
 
@@ -91,11 +95,31 @@ public class OrderServiceTest {
         //  신규상품_책_주문이_정상적으로_작동되는지()'에서 정의된 변수'만 가능하다!
 
 
-        assertEquals("상품주문 정상 완료되면 그 상태는 ORDER여야 함", OrderStatus.ORDER, getOrder.getStatus());
+        //검증내용 (1)
+        assertEquals("상품주문이 정상 완료되면, 그 상태는 ORDER여야 함", OrderStatus.ORDER, getOrder.getStatus());
         //- '(String message, Object expected, Object actual)' 형식을 따라감.
-        //- 'Object expected': 상품주문이 정상 완료되면, 그 때 출력 예상되는 결괏값
-        //- 'Object actual': 상품주문이 정상 완료되면, 그 대 출력되는 실제값(실제 애플리케이션의 코드를 가져와야 함)
+        //- 'Object expected': 상품주문이 정상 완료되면, 그 때 실제 애플리케이션에서 출력되는 결괏값(실제 애플리케이션의 코드를 가져와야 함)
+        //- 'Object actual': 상품주문이 정상 완료되면, 그 때 테스트코드에서 출력되는 실제값(테스트코드를 가져와야 함)
 
+
+        //검증내용 (2)
+        assertEquals("상품주문이 정상 완료되면, 주문한 상품의 '종류'와 '수량이 정확해야 함", 2,
+                            getOrder.getOrderItems().size());
+        //테스트코드에서 '책 Book 객체 2권'을 주문했으니, 당연히 'expected는 '2''이 되어야 함
+
+
+        //검증내용 (3)
+        assertEquals("상품주문이 정상 완료되면, '주문 가격'은 '가격'*'수량'이 되어야 함", 8000*2,
+                            getOrder.getTotalPrice());
+        //테스트코드에서 '가격이 8000원인 책 Book 객체 2권'을 주문했으니,
+        //상품주문 코드를 다 정상적으로 작성했다면, 출력되는 실제값도 1600이어야 한다.
+
+
+        //검증내용 (4)
+        assertEquals("상품주문이 정상 완료되면, '현재 재고'에서 '해당 주문 수량만큼 감소'되어야 함", 8,
+                            book.getStockQuantity());
+        //테스트코드에서 '현재 재고를 10권으로 설정했고', 이후 '신규주문으로 책 2권을 주문했으니', '주문 후 재고는 8권'이 되어야 함.
+        //그런데,
 
 
 
@@ -104,10 +128,8 @@ public class OrderServiceTest {
 
     
     //< '주문 취소'가 잘 작동하는지 테스트 >
-    @Test
-    public void 주문취소가_정상적으로_작동되는지() throws Exception{
-
-
+//    @Test
+//    public void 주문취소가_정상적으로_작동되는지() throws Exception{
 
 
     }
@@ -116,9 +138,27 @@ public class OrderServiceTest {
 //=============================================================================================================
 
 
-    //< '재고수량 초과'
-    @Test
-    public void 상품주문_재고수량초과() throws Exception{
+    //[ '주문 기능 테스트'강. 09:10~ ]
+
+    //< 고객이 상품을 신규 주문 하였으나, 현재 재고수량보다 더 많이 주문해서 주문이 안 되는 경우 테스트 >
+
+    @Test(expected = NotEnoughStockException.class)
+    public void 신규주문량이_현재재고수량보다_많은_경우() throws Exception{
+
+        //# 전제 given
+        Member member = new Member();
+        member.setName("yujong");
+        member.setAddress(new Address("Seoul", "Dobong-gu", "01336"));
+        //'클래스 Member의 필드 Address(private Address address)'는,
+        //'자료형 Address '객체타입''이기에, 당연히 'Address 객체'를 사용할 때는 당연히 '새로운 객체 생성하는 객체 타입'으로만
+        //사용하는 것이 가능한 것임.
+
+
+        //# 조건 when
+
+
+
+        //# 검증 then
 
 
 
