@@ -78,10 +78,11 @@ public class OrderServiceTest {
 
 
         //# 조건 when
-        //바로 위에서 작성한 '테스트코드용 회원 Member객체의 속성'과 '테스트코드용 책 Book 객체의 속성'을 불러옴
+        //테스트코드용으로 책 2권 주문하기로 함
+        //바로 위에서 작성한 '테스트코드용 회원 Member객체의 속성'과 '테스트코드용 책 Book 객체의 속성'을 불러옴.
         //'서비스 OrderService의 메소드 order의 리턴타입'으로 단순 식별 목적으로 '자료형 Long'을 해줬기 때문에,
         //여기서 '변수 testOrderId'를 만들어서 그것에 넣어줄 때 '변수 testOrderId의 자료형을 Long 타입'으로 해주는 것이 가능하다!
-        Long testOrderId = orderService.order(member.getId(), book.getId(), 2); //테스트코드용으로 2권 주문하기로 함
+        Long testOrderId = orderService.order(member.getId(), book.getId(), 2);
 
 
 
@@ -142,20 +143,26 @@ public class OrderServiceTest {
 
     //< 고객이 상품을 신규 주문 하였으나, 현재 재고수량보다 더 많이 주문해서 주문이 안 되는 경우 테스트 >
 
-    @Test(expected = NotEnoughStockException.class)
+    @Test(expected = NotEnoughStockException.class) //현재 재고수량보다 많은 주문이 들어온 경우를 테스트해서,
+                                                    //테스트코드가 정상적으로 작동한다면 이 예외를 발생시키는 것임.
     public void 신규주문량이_현재재고수량보다_많은_경우() throws Exception{
 
         //# 전제 given
-        Member member = new Member();
-        member.setName("yujong");
-        member.setAddress(new Address("Seoul", "Dobong-gu", "01336"));
-        //'클래스 Member의 필드 Address(private Address address)'는,
-        //'자료형 Address '객체타입''이기에, 당연히 'Address 객체'를 사용할 때는 당연히 '새로운 객체 생성하는 객체 타입'으로만
-        //사용하는 것이 가능한 것임.
+
+        //'주문할 테스트코드용 회원 Member 객체'를 생성해줌. '주문 기능 테스트'강. 10:20~
+        Member member = createMember(); //- 'Extract Method 기능': 'Member 객체를 새로 만들고, 그 내부에 속성 집어넣어주고
+                                        //   이런 코드들을 다 드래그로 영역설정해서 'ctrl + alt + M' 누르면,
+                                        //   그 코드들을 '하나의 메소드'로 저 ~아래에 별도로 자동으로 만들어주고,
+                                        //   이제 그 메소드를 호출해서 이것처럼 간단히 '테스트코드용 새로운 Member 객체'를 만들 수 있음.
+
+
+        //'주문되는 테스트코드용 상품 책 Book 객체'를 생성해줌
+        Book book = createBook();
 
 
         //# 조건 when
-
+        //테스트코드용으로 5권 주문하기로 함
+        orderService.order(member.getId(), book.getId(), 5);
 
 
         //# 검증 then
@@ -165,6 +172,37 @@ public class OrderServiceTest {
 
     }
 
+
+
+//=============================================================================================================
+
+
+    //'주문 기능 테스트'강. 10:20~
+    //- 'Extract Method 기능': 'Member 객체를 새로 만들고, 그 내부에 속성 집어넣어주고
+    //   이런 코드들'을 다 드래그로 영역설정해서 'ctrl + alt + M' 누르면,
+    //   그 코드들을 '하나의 메소드'로 별도로 자동으로 만들어주고,
+    //   이제 그 메소드를 호출해서 위에서 간단히 '테스트코드용 새로운 Member 객체'를 만들 수 있음.
+
+    private Member createMember() {
+        Member member = new Member();
+        member.setName("yujong");
+        member.setAddress(new Address("Seoul", "Dobong-gu", "01336"));
+        //'클래스 Member의 필드 Address(private Address address)'는,
+        //'자료형 Address '객체타입''이기에, 당연히 'Address 객체'를 사용할 때는 당연히 '새로운 객체 생성하는 객체 타입'으로만
+        //사용하는 것이 가능한 것임.
+        em.persist(member);
+        return member;
+    }
+
+
+    private Book createBook() {
+        Book book = new Book();
+        book.setName("성경");
+        book.setPrice(5000);
+        book.setStockQuantity(100);
+        em.persist(book);
+        return book;
+    }
 
 
 //=============================================================================================================
