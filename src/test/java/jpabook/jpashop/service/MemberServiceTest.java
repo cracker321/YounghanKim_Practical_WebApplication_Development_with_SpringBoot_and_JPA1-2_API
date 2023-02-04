@@ -30,8 +30,14 @@ import static org.junit.Assert.*;
   그냥 자동적으로 '인메모리 방식'으로 서버를 돌려줘서, 저 아래 'spring: 이하 부분들 다 주석처리 해줘도 된다!!'
  */
 @RunWith(SpringRunner.class) // [ '회원 기능 테스트'강. 17:15~ ]
-                             //'JUnit을 실행할 때, 이 스프링부트 '메인 서버(아마도?)'와 같이 엮어서 실행시켜주는 것
-                             //즉, '메인 서버도 먼저 실행시킨 후 테스트서버가 실행되는 순서'이다!(아마 맞는데, 더 확실히 알기!)
+//https://ssons.tistory.com/63
+//https://recordsoflife.tistory.com/1080
+//https://stackoverflow.com/questions/58901288/springrunner-vs-springboottest
+//- '@RunWith(SpringRunner.class)': '단위 테스트'를 수행하는 동안에만 사용되는 어노테이션.
+//                             '현재 프로젝트 전체를 로드하여 테스트하는 것이 아니라', 여기처럼 '현재 클래스 MemberServiceTest'만
+//                                  테스트할 때 사용하는 어노테이션임.
+//- '@SpringBootTest': 이거 하나만 사용하고, '@RunWith(SpringRunner.class)'를 추가로 붙이지 않으면,
+//                     '현재 프로젝트 전체의 application context 전부를 로딩'하여 '테스트 로딩 시간 지연'됨.
 @SpringBootTest //'현재 스프링부트 메인 서버를 띄운 상태'에서 '이 테스트서버'를 실행하는 것.
                 //이게 없으면 아래 '@Autowired'에 연결되어 있는 의존성 주입이 다 실패하게 됨.
 @Transactional //'테스트 케이스일 경우에서 사용되는 '@Transactional''은 기본적으로 'SQL 쿼리문을 DB로 커밋 안 하고, 롤백을 해버린다'.
@@ -44,6 +50,9 @@ import static org.junit.Assert.*;
                //것처럼, 'DB로 쿼리문('INSERT ...' 등)을 날리고 그 쿼리문 자체를 콘솔창에 보여준다!!'
                //테스트코드이더라도, '@Rollback(false)'해버리면, 실제로 DB에 쿼리문이 날라가서 DB에 데이터가 저장 등 CRUD된다!!
 public class MemberServiceTest {
+
+
+//===============================================================================================================
 
     @Autowired
     MemberService memberService;

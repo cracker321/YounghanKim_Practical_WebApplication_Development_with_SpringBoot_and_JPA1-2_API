@@ -10,22 +10,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static jpabook.jpashop.domain.DeliveryStatus.READY;
 
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class OrderService {
+public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코드' 만들 수 있는 단축키 나옴
 
 
 
 //=================================================================================================================
 
 
-    //바로 아래 '< 신규주문 저장 >'에서 사용된 'memberRepository.findOne(memberId)'와 'itemRepository.findOne(itemId)'를
-    //사용하기 위해 아래에서 '레펏 OrderRepository'와 '레펏 ItemRepository'를 '의존성주입 DI로 가져옴'.
 
+    //- 바로 아래 '< 신규주문 저장 >'에서 사용된 'memberRepository.findOne(memberId)'와 'itemRepository.findOne(itemId)'를
+    //  사용하기 위해 아래에서 '레펏 OrderRepository'와 '레펏 ItemRepository'를 '의존성주입 DI로 가져옴'.
+    //- '엔티티 객체(e.g: Member 객체, Order 객체 등)'는 '@Autowired'와 같은 의존성 주입을 할 필요 없고,
+    //  그냥 가져와서 쓸 수 있다!
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
@@ -107,7 +111,7 @@ public class OrderService {
 //=================================================================================================================
 
 
-    //< 주문 취소 >. '주문 서비스 개발'강. 11:30~.
+    //< 주문 취소 >. '주문 서비스 개발'강. 11:30~
     //
     @Transactional
     public void cancelOrder(Long orderId){ //여기서 '매개변수 orderId'는 그냥 여기서 메소드 안에서만 사용할 수 있는
@@ -125,9 +129,11 @@ public class OrderService {
 //=================================================================================================================
 
 
-    //< 주문 검색 >
-
-
+//    //< 전체 주문 검색 >. '주문 서비스 개발'강. 14:55~
+//    public List<Order> findOrders(OrderSearch orderSearch){ //'Order 객체 내부의
+//
+//        return orderRepository.findAll(orderSearch);
+//    }
 
 
 //=================================================================================================================
