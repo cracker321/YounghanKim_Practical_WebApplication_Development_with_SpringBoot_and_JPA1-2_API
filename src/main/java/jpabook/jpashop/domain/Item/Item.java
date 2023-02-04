@@ -4,6 +4,7 @@ package jpabook.jpashop.domain.Item;
 import jpabook.jpashop.domain.CategoryItem;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ Setter는 문제가 다르다. Setter를 호출하면 데이터가 변한다. Se
  */
 
 @Getter
+@Setter
 @DiscriminatorColumn(name = "DTYPE")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) //'단일 테이블 전략'. '상속관계 매핑'.
 @Entity

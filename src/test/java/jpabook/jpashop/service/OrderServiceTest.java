@@ -1,12 +1,19 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.domain.Address;
+import jpabook.jpashop.domain.Item.Book;
+import jpabook.jpashop.domain.Item.Item;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.OrderRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +31,18 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class OrderServiceTest {
 
-    //[ '주문 기능 테스트'강 ]
+
+//=============================================================================================================
+
+
+    @Autowired
+    EntityManager em;
+    @Autowired
+    OrderService orderService; //'테스트코드' 작성 시에는 'private final'을 안 붙여도 된다!
+    @Autowired
+    OrderRepository orderRepository;
+
+
 
 
 //=============================================================================================================
@@ -34,17 +52,34 @@ public class OrderServiceTest {
 
     //< '신규주문 생성'이 잘 작동하는지 >
     @Test
-    public void 상품주문() throws Exception {
+    public void 신규상품_책_주문이_정상적으로_작동되는지() throws Exception {
 
         //# 전제 given
+
+        //'주문할 테스트코드용 회원 Member 객체'를 생성해줌
         Member member = new Member();
+        member.setName("yujnog");
+        member.setAddress(new Address("Seoul", "Dobong-gu", "01336"));
+        em.persist(member);
+
+
+        //'주문되는 테스트코드용 상품 책 Book 객체'를 생성해줌
+        Book book = new Book(); //여기서는 여러 상품들 중에서 '책 Book 객체'를 신규주문 한다고 가정함
+        book.setName("객체지향의 사실과 오해");
+        book.setPrice(8000);
+        book.setStockQuantity(10); //'책 Book 객체의 현재 재고'를 10개로 임의로 잡음
+        em.persist(book);
+
 
 
         //# 조건 when
+        //바로 위에서 작성한 '테스트코드용 회원 Member객체의 속성'과 '테스트코드용 책 Book 객체의 속성'을 불러옴
+        orderService.order(member.getId(), book.getId(), 2); //테스트코드용으로 2권 주문하기로 함
+
 
 
         //# 검증 then
-
+        orderRepository.findOne(); //'레펏 OrderRepository의 메소드 findOne'은 현재 'DB에 있는 데이터를 가져오는 기능!'
 
     }
 
@@ -54,7 +89,7 @@ public class OrderServiceTest {
     
     //< '주문 취소'가 잘 작동하는지 테스트 >
     @Test
-    public void 주문취소() throws Exception{
+    public void 주문취소가_정상적으로_작동되는지() throws Exception{
 
 
 

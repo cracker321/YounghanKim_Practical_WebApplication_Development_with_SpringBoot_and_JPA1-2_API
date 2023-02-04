@@ -21,9 +21,7 @@ import static jpabook.jpashop.domain.DeliveryStatus.READY;
 public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코드' 만들 수 있는 단축키 나옴
 
 
-
 //=================================================================================================================
-
 
 
     //- 바로 아래 '< 신규주문 저장 >'에서 사용된 'memberRepository.findOne(memberId)'와 'itemRepository.findOne(itemId)'를
@@ -41,6 +39,7 @@ public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코
     //[ '주문 서비스 개발'강. 00:30~ ]
 
     //< 신규주문 저장 >
+
     //: DB에 1개의 주문 객체를 저장시킴
     @Transactional //'신규주문 저장'은 DB에 새로운 데이터를 넣는 것, 즉 DB의 기존상태를 변화시키는 것이므로 '@Transactional'사용!
     public Long order(Long memberId, Long itemId, int count){ //'신규 주문하기 위해서는', '회원 ID', '상품 식별번호',
