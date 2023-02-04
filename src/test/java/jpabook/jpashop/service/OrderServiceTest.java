@@ -5,6 +5,7 @@ import jpabook.jpashop.domain.Item.Book;
 import jpabook.jpashop.domain.Item.Item;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,10 +91,13 @@ public class OrderServiceTest {
         //  신규상품_책_주문이_정상적으로_작동되는지()'에서 정의된 변수'만 가능하다!
 
 
+        assertEquals("상품주문 정상 완료되면 그 상태는 ORDER여야 함", OrderStatus.ORDER, getOrder.getStatus());
+        //- '(String message, Object expected, Object actual)' 형식을 따라감.
+        //- 'Object expected': 상품주문이 정상 완료되면, 그 때 출력 예상되는 결괏값
+        //- 'Object actual': 상품주문이 정상 완료되면, 그 대 출력되는 실제값(실제 애플리케이션의 코드를 가져와야 함)
 
 
 
-    }
 
 
 //=============================================================================================================
