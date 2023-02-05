@@ -45,8 +45,6 @@ public class OrderServiceTest {
     OrderRepository orderRepository;
 
 
-
-
 //=============================================================================================================
 
 
@@ -55,8 +53,8 @@ public class OrderServiceTest {
     //< '신규주문 생성'이 잘 작동하는지 >
     @Test
     public void 신규상품_책_주문이_정상적으로_작동되는지() throws Exception {
-    //테스트케이스에서 현재 메소드 내부에서 'ctrl + shift + T' 누르면,
-    //'현재 메소드와 연관되어 있는 메인 애플리케이션의 해당 부분'으로 이동이 가능함
+        //테스트케이스에서 현재 메소드 내부에서 'ctrl + shift + T' 누르면,
+        //'현재 메소드와 연관되어 있는 메인 애플리케이션의 해당 부분'으로 이동이 가능함
 
         //# 전제 given
 
@@ -113,7 +111,7 @@ public class OrderServiceTest {
         assertEquals("상품주문이 정상 완료되면, '주문 가격'은 '가격'*'수량'이 되어야 함", 8000 * 2,
                 getOrder.getTotalPrice());
         //테스트코드에서 '가격이 8000원인 책 Book 객체 2권'을 주문했으니,
-        //상품주문 코드를 다 정상적으로 작성했다면, 출력되는 실제값도 1600이어야 한다.
+        //상품주문 코드를 다 정상적으로 작성했다면, 출력되는 실제값도 1600이어야 한다.d
 
 
         //검증내용 (4)
@@ -134,16 +132,16 @@ public class OrderServiceTest {
     //< 고객이 상품을 신규 주문 하였으나, 현재 재고수량보다 더 많이 주문해서 주문이 안 되는 경우 테스트 >
 
     @Test(expected = NotEnoughStockException.class) //현재 재고수량보다 많은 주문이 들어온 경우를 테스트해서,
-                                                    //테스트코드가 정상적으로 작동한다면 이 예외를 발생시키는 것임.
-    public void 신규주문량이_현재재고수량보다_많은_경우() throws Exception{
+    //테스트코드가 정상적으로 작동한다면 이 예외를 발생시키는 것임.
+    public void 신규주문량이_현재재고수량보다_많은_경우() throws Exception {
 
         //# 전제 given
 
         //'주문할 테스트코드용 회원 Member 객체'를 생성해줌. '주문 기능 테스트'강. 10:20~
         Member member = createMember(); //- 'Extract Method 기능': 'Member 객체를 새로 만들고, 그 내부에 속성 집어넣어주고
-                                        //   이런 코드들'을 다 드래그로 영역설정해서 'ctrl + alt + M' 누르면,
-                                        //   이제 편리하게 그 코드들을 '하나의 메소드'로 저 ~아래에 별도로 자동으로 만들어주고,
-                                        //   이제 그 메소드를 호출해서 이것처럼 간단히 '테스트코드용 새로운 Member 객체'를 만들 수 있음.
+        //   이런 코드들'을 다 드래그로 영역설정해서 'ctrl + alt + M' 누르면,
+        //   이제 편리하게 그 코드들을 '하나의 메소드'로 저 ~아래에 별도로 자동으로 만들어주고,
+        //   이제 그 메소드를 호출해서 이것처럼 간단히 '테스트코드용 새로운 Member 객체'를 만들 수 있음.
 
 
         //'주문되는 테스트코드용 상품 책 Book 객체'를 생성해줌
@@ -153,16 +151,56 @@ public class OrderServiceTest {
         int orderCount = 20; //그렇기에, 테스트코드가 정상적으로 작동한다면, 예외가 빵~ 터져야 정상적으로 테스트코드 성공한 것임
 
 
-
         //# 조건 when
         //테스트코드용으로 5권 주문하기로 함
         orderService.order(member.getId(), item.getId(), orderCount); //이렇게 테스트코드 설정해줬으니,
-                                                                      //신규 주문수량이 현재 재고수량 초과로 예외 터져야
-                                                                      //정상적으로 테스트코드 성공한 것임
+        //신규 주문수량이 현재 재고수량 초과로 예외 터져야
+        //정상적으로 테스트코드 성공한 것임
 
         //# 검증 then
         fail("현재 재고수량보다 초과로 신규 주문수량이 들어왔기 때문에, '재고 부족 예외'가 터져야 합니다..그 예외가 안 터져서" +
                 "코드 실행이 여기 라인까지가 내려왔으니, 이건 유종아 너가 테스트코드를 잘못 작성한 것이야.");
+    }
+
+
+//=============================================================================================================
+
+
+    //< '주문 취소'가 잘 작동하는지 테스트 >. '주문 기능 테스트'강. 14:45~
+    @Test
+    public void 주문취소가_정상적으로_작동되는지() throws Exception {
+
+
+        //# 전제 given
+        Member member = createMember();
+        Item item = createBook("객사오", 12000, 7); //'현재 책 재고수량'은 7개로 가정, 설정함.
+
+        int orderCount = 2; //'신규 주문수량'을 2권으로 가정, 설정함.
+        //이제 그럼 '주문 후 재고는 5개'가 되었으나, 아래에서 '주문 취소가 이루어지고, '원상복구된 후 재고'를 다시 테스트하면
+        //예상되는 출력값(남은 재고량)은 당연히 원래대로 '7'이 돼야 함
+
+        Long testOrderId = orderService.order(member.getId(), item.getId(), orderCount);
+        //여기까지가, 아래 '조건 when'에서 '주문취소'를 테스트하기 위한 기본 준비 세팅임.
+
+
+        //# 조건 when(실제 내가 테스트하고자 하는 부분)
+        orderService.cancelOrder(testOrderId);
+
+
+        //# 검증 then. '주문 기능 테스트'강. 16:20~
+        //'주문 취소가 되었으니', '기존재고에서 해당 취소된 수량이 더 들어오니' '재고가 원상대로 복귀하는지 여부를 검증'함.
+        //'취소를 적용해야 할 주문 Order'를 '레펏 OrderRepository'를 통해 'DB로부터 가져와서 변수 getOrder에 저장시킴'.
+        Order getOrder = orderRepository.findOne(testOrderId);
+
+
+        //검증내용 (1)
+        assertEquals("주문취소가 정상 완료되면, 주문상태는 CANCEL이 되어야 함", OrderStatus.CANCEL,
+                getOrder.getStatus());
+
+        //검증내용 (2)
+        assertEquals("주문취소가 정상 완료되면, 재고가 원상복구 되어야 함", 7, item.getStockQuantity());
+        //'item.addStock(orderCount)'가 아니라, 'item.getStockQuantity()'를 호출하는 것이 맞는 것이다!
+
     }
 
 
@@ -198,44 +236,6 @@ public class OrderServiceTest {
 
 
 //=============================================================================================================
-
-
-    //< '주문 취소'가 잘 작동하는지 테스트 >. '주문 기능 테스트'강. 14:45~
-    @Test
-    public void 주문취소가_정상적으로_작동되는지() throws Exception{
-
-
-        //# 전제 given
-        Member member = createMember();
-        Item item = createBook("객사오", 12000, 7); //'현재 책 재고수량'은 7개로 가정, 설정함.
-
-        int orderCount = 2; //'신규 주문수량'을 2권으로 가정, 설정함. 
-                            //이제 그럼 아래에서 '남은 재고'를 테스트하면 예상되는 출력값(남은 재고량)은 '5'가 돼야 함
-
-        Long testOrderId = orderService.order(member.getId(), item.getId(), orderCount);
-        //여기까지가, 아래 '조건 when'에서 '주문취소'를 테스트하기 위한 기본 준비 세팅임.
-
-
-
-        //# 조건 when(실제 내가 테스트하고자 하는 부분)
-        orderService.cancelOrder(testOrderId);
-
-
-        //# 검증 then. '주문 기능 테스트'강. 16:20~
-        //'주문 취소가 되었으니', '기존재고에서 해당 취소된 수량이 더 들어오니' '재고가 원상대로 복귀하는지 여부를 검증'함.
-        //'취소를 적용해야 할 주문 Order'를 '레펏 OrderRepository'를 통해 'DB로부터 가져와서 변수 getOrder에 저장시킴'.
-        Order getOrder = orderRepository.findOne(testOrderId);
-
-
-        //검증내용 (1)
-        assertEquals("주문취소가 정상 완료되면, 주문상태는 CANCEL이 되어야 함", OrderStatus.CANCEL,
-                                getOrder.getStatus());
-
-        //검증내용 (2)
-        assertEquals("주문취소가 정상 완료되면, 재고가 원상복구 되어야 함", 9, item.getStockQuantity());
-        //'item.addStock(orderCount)'가 아니라, 'item.getStockQuantity()'를 호출하는 것이 맞는 것이다!
-
-
 
 
 }
