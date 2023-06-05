@@ -106,7 +106,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
                                       //  그 메소드에 한해서는 '@Transactional(readOnly = true)'보다 더
                                       //  우선권을 갖게 되므로, 그 위에 그렇게 써주면 된다!
 
-    List<Member> findMembers(){
+    public List<Member> findMembers(){
 
         List<Member> members = memberRepository.findAll();
 
@@ -122,7 +122,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
     //'개별 회원을 식별'하려면 '식별자인 id'가 필요하기 때문에, 매개변수로 id를 건네준 것임
     //@Transactional(readOnly = true) //'조회'를 수행할 때,'읽기 전용 트랜잭션 @Transactional(readOnly = true)'
                                       //를 붙이면, 보다 좀 더 '성능 최적화'가 가능함
-    Member findMember(Long memberId){ //'조회'를 수행할 때 '@Transactional(readOnly = true)'를 붙이면,
+    public Member findMember(Long memberId){ //'조회'를 수행할 때 '@Transactional(readOnly = true)'를 붙이면,
                                       //보다 좀 더 '성능 최적화'가 가능함.
 
         Member member = memberRepository.findOne(memberId);

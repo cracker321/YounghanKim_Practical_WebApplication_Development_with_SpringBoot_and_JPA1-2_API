@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <!--
+    [ form 태그 ]
+    - 웹페이지에서 사용자로부터 데이터를 입력받을 수 있는 영역을 생성함.
+    - 사용자 입력을 서버로 전송하여 데이터 처리를 가능하게 함.
+    - '<form>과 </form> 사이'에 작성함.
+    - form태그 안에는 입력 요소를 추가하며, 각 요소에는 name속성을 부여함.
+    -->
+
+    <!--
+    [ action 태그 ]: '/members/new'
+    - form 데이터를 처리할 서버 스크립트 파일의 경로를 지정함.
+    - '<form>태그'에 추가되어 데이터 처리를 위한 서버 스크립트 파일의 경로를 지정함.
+    -->
+
+
+    <!-- 'memberForm': '컨트롤러 MemberController에서 'new MemberForm 데이터'를 담고 있는 모델객체 변수명 memberForm'
+    즉, 'MemberForm 객체'의 내부 필드(속성)들을 활용하는 것임. -->
+
+    <!-- 'method="post"':
+    1.'컨트롤러 MemberController의 @GetMapping("/members/new") public String createForm(Model model)'를 통해
+    '뷰 createMemberForm.html' 여기로 찾아와서 아래 코드를 통해 브라우저에 '아래 폼 태그 내부의 폼 데이터를 표시' 했다면,
+    이 코드를 쭉 다 실행해서 화면에 표시하고,
+    (컨트롤러의 해당 메소드의 'Get 요청(@GetMapping)'을 통해 아래 '뷰 createMemberForm.html' 내부의 코드가 화면에 띄워짐(=표시됨).
+    즉, 데이터를 서버로부터 받아오는(=GET) 것임.)
+    2.저~ 아래 'submit 제출' 버튼을 누르면, 아래 폼 태그 내부에 사용자가 입력한 내용들을 서버 사이드로 전송하는데,
+    이 경우, 사용자가 '입력'한 것을 전달하여 서버에 것이기에 'post 메소드'를 사용해야 함.
+    (여기서의 method="post"를 통해 아래에서 입력한 정보를 서버단으로 POST요청을 통해 전송시키는 것임.
+    즉, 데이터를 서버로 보내서 서버에 등록시키는(=POST) 것임.)-->
+    <form role="form" action="/members/new" th:object="${memberForm}" method="post">
+        <div class="form-group">
+            <label th:for="name">이름</label>
+            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
+                   th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect date</p>
+<!-- 만약, 사용자가 '이름' 필드에 입력한 정보가 입력 양식에 맞지 않는 경우, 'name 필드'에 대한 '에러 메시지를 출력'해준다는 의미임.            -->
+
+
+            <!-- [ 타임리프에서의 'th:field' 문법 ]
+            - 'form태그 안의 input필드'와 '서버 쪽의 모델 객체의 속성'을 바인딩(연결)하는 역할.
+            - 여기서는 'MemberForm 객체'의 필드(속성)들 private String name, private String city, private String street, ..
+              을 사용하고 있는 것임.
+            - 사용법:
+            < input type="text" th:field="*{서버 쪽 모델 객체의 필드명(속성명)}"/>
+            - eg) 타임리프 문법을 사용한 < input type="text" th:field="*{city}"/> 와
+                  타임리프 문법을 사용하지 않은 < input type="text" id="city" name="city" value="" >
+                  는 서로 같은 의미이다!
+
+            -->
+
+        </div>
+        <div class="form-group">
+            <label th:for="city">도시</label>
+            <input type="text" th:field="*{city}" class="form-control" placeholder="도시를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="street">거리</label>
+            <input type="text" th:field="*{street}" class="form-control" placeholder="거리를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="zipcode">우편번호</label>
+            <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>
