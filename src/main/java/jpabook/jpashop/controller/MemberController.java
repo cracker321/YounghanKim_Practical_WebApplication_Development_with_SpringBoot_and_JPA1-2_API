@@ -45,7 +45,6 @@ public class MemberController {
         //'뷰 members/createMemberForm'으로 찾아감.
         //'templates/members/createMemberForm.html'을 찾아가서, 그 내용을 브라우저로 보냄.
         //화면에 실제 표시되는 것 --> '뷰 members/createMemberForm' 내부의 로직이 화면에 표시됨.
-    }
 //=======================================================================================
 
 
@@ -68,16 +67,21 @@ public class MemberController {
 //========================================================================================================
 
 
-    //사용자가 저~기 '뷰 createMemberForm'에서 입력한 본인의 회원가입 정보 입력 데이터를 method='post'를 통해 받아와서
-    //아래에서 그 신규 정보를 서버에 입력하는 기능을 수행하는 메소드임.
 
     //< 신규 회원 등록하는 '폼 페이지(=뷰 createMemberForm.html)'에 신규 회원이 입력한 본인 회원정보를
     // 이제 DB에 '등록 post'시키는 메소드 >
-    //- '화면 ---> 서버'의 과정
+
+    //사용자가 저~기 '뷰 createMemberForm'에서 입력한 본인의 회원가입 정보 입력 데이터를 method='post'를 통해 받아와서
+    //아래에서 그 신규 정보를 서버에 입력하는 기능을 수행하는 메소드임.
+    //- '화면(사용자가 입력한 데이터) ---> 서버'의 과정
     @PostMapping("/members/new")
     public String create(@Valid MemberForm form, BindingResult result) {
-        //여기는 메소드의 매개변수로 'Model 객체'가 아닌 'MemberForm 객체'가 왔기 때문에, 이건 데이터를 '뷰'로 보내는 것이 아닌,
-        //데이터를 '뷰'로부터 받아와서 서버에 저장하는 과정인 것이다!!
+        //- '메소드 createForm'에서 '뷰 members/createMemberForm'로 보낼 때, 'new MemberForm 객체'를 'Model 객체에 담아
+        //  보냈기 때문'에,
+        //  당연히 '뷰 ~'에서 처리되는 데이터도 'MemberForm 객체'이고, 따라서, 여기에서 다시 그 뷰로부터 받아오는 데이터도
+        //  당연히 'MemberForm 객체'이기에, 여기 메소드의 매개변수에 'MemberForm 객체'를 넣어주는 것임. 너무 당연함.
+        //- 여기는 메소드의 매개변수로 'Model 객체'가 아닌 'MemberForm 객체'가 왔기 때문에, 이건 데이터를 '뷰'로 보내는 것이 아닌,
+        //  데이터를 '뷰'로부터 받아와서 서버에 저장하는 과정인 것이다!!
 
 
         if (result.hasErrors()) { //만약, 사용자가 입력한 본인의 회원가입 정보가, 개발자가 작성한 'MemberForm 객체'의
@@ -104,6 +108,10 @@ public class MemberController {
         //'createMember.html'에서 '사용자가 입력한 city,street, zipcode'를 가져와서
         //그것으로 '새로운 Address 객체'를 만들어줌.
 
+
+        //아래처럼 이렇게 setter 열어서 컨트롤러에서 이렇게 사용하는 건 좋지 못한 설계임. 
+        //이것보단, Member 객체를 여기 메소드의 매개변수로 받아와서 사용하는 것이 좋음.
+        //근데 이건 그냥 간단한 예제이기에 아래처럼 setName, setAddress 이렇게 사용함.
 
         Member member = new Member(); //'createMember.html'에서 사용자가 회원가입하려 입력한 데이터를 이제
         //'새로운 Member 객체'를 만들어서,
@@ -133,6 +141,10 @@ public class MemberController {
         List<Member> members = memberService.findMembers(); //'서비스'에서 '레퍼지토리'를 통해 DB로부터 데이터 가져오고
                                                             //그 가져온 '서비스 데이터'를 다시 여기 '컨트롤러'에서
                                                             //그 서비스를 호출해서 그 데이터를 가져옴.
+        //cf) 근데 사실 이렇게 바로 엔티티를 화면에 건네주면 안되는 것임.
+        //    이건 그냥 타임리프와 같은 '템플릿 엔진'을 사용하기에, 화면도 다 서버 사이드에서 처리되고 하고,
+        //    또, 간단해서 바로 엔티티를 넘긴 것인데,
+        //    백-프론트 분리해서 API 작성할 때는 반드시 DTO로 감싸서 넘겨줘야 함.
 
         model.addAttribute("members", members); //서비스로부터 가져온 전체 회원 목록 데이터를
 

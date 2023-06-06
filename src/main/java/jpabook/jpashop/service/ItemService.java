@@ -36,7 +36,7 @@ public class ItemService {
 
 
     //< 1개의 Item을 DB로부터 조회하기 >
-    public Item findItem(Long itemId){
+    public Item findOne(Long itemId){
 
 
         Item savedItem = itemRepository.findOne(itemId);
@@ -49,7 +49,7 @@ public class ItemService {
 
 
     //< DB에 저장되어 있는 모든 Item 객체들을 조회하기 >
-    public List<Item> findAllItems(){
+    public List<Item> findItems(){
 
         List<Item> items = itemRepository.findAll();
 

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- 사용자가 화면에서 아래 칸에 따라 신규 상품 정보 다 작성하고 submit 버튼 누르면, 이제 이 데이터가
+     바로 아래 action 태그의 URL 요청 링크인 '/items/new'로 화면이 넘어간다!-->
+    <form th:action="@{/items/new}" th:object="${form}" method="post">
+
+        <div class="form-group">
+            <label th:for="name">상품명</label>
+            <input type="text" th:field="*{name}" class="form-control"
+                   placeholder="이름을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="price">가격</label>
+            <input type="number" th:field="*{price}" class="form-control"
+                   placeholder="가격을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="stockQuantity">수량</label>
+            <input type="number" th:field="*{stockQuantity}" class="form-control"
+                   placeholder="수량을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="author">저자</label>
+            <input type="text" th:field="*{author}" class="form-control"
+                   placeholder="저자를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label th:for="isbn">ISBN</label>
+            <input type="text" th:field="*{isbn}" class="form-control"
+                   placeholder="ISBN을 입력하세요">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>
