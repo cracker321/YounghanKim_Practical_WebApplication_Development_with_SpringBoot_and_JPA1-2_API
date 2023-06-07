@@ -5,6 +5,8 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 
+
+//< 엔티티 객체 >
 @Data
 public class MemberForm {
 

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.sql.DataSourceDefinitions;
 
+
+//< 엔티티 객체 >
 @Data
 public class BookForm {
 

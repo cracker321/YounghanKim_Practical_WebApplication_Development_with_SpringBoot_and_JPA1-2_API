@@ -76,6 +76,12 @@ public class MemberController {
     //- '화면(사용자가 입력한 데이터) ---> 서버'의 과정
     @PostMapping("/members/new")
     public String create(@Valid MemberForm form, BindingResult result) {
+        //- '변수 form': 사용자가 'MemberForm 객체'의 필드 속성들 형식에 맞추어서 신규 가입에 필요한 '본인의 정보'를 폼 화면에
+        //              입력한 정보.
+        //              그리고, 그 정보를 submit 했으니, 이제 그것을 여기서 받아오는 것임.
+        //              이제 그것을 여기서 받아와서, 서버 DB에 저장하는 과정인 것임.
+
+
         //- '메소드 createForm'에서 '뷰 members/createMemberForm'로 보낼 때, 'new MemberForm 객체'를 'Model 객체에 담아
         //  보냈기 때문'에,
         //  당연히 '뷰 ~'에서 처리되는 데이터도 'MemberForm 객체'이고, 따라서, 여기에서 다시 그 뷰로부터 받아오는 데이터도
