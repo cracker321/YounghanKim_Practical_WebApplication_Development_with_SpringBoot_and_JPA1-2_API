@@ -31,6 +31,8 @@ public class OrderController {
     //[ '상품 주문'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
 
     //< 상품 주문 >
+    //< 사용자에게 신규 '상품 주문'하는 '폼 페이지(=뷰 orderForm.html)'로 이동시키는(사용자에게 해당 폼 페이지를 보여주기 위한) 메소드 >
+    //'서버 ---> 화면'의 과정
 
     @GetMapping("/order")
     public String createForm(Model model) { //1.사용자에게 보여줄 폼 화면에 '회원 Member 객체'와 '상품 Item 객체' 정보를
@@ -58,6 +60,16 @@ public class OrderController {
 
 //========================================================================================================
 
+    //< 사용자가 직접 상품을 주문하는 기능 >
+
+    //< 상품 주문하는 '폼 페이지(=뷰 OrdermForm.html)'에 사용자가 신규로 입력한 신규 '상품 정보'를,
+    //  여기 컨트롤러 메소드가 받아와서, 그 폼에 입력된 정보를 이제 DB에 '등록 post'시키는 메소드 >
+
+    //- '화면(사용자가 입력한 데이터) ---> 서버'의 과정
+
+    //사용자가 저~기 '뷰 orderForm'에서 입력한 '상품 주문' 정보 입력 데이터를 method='post'를 통해 받아와서
+    //아래에서 그 상품 주문 정보를 서버에 입력하는 기능을 수행하는 메소드임.
+
 
     //< '쿼리파라미터'와 '@RequestParam' >
     //여기서는 쿼리파라미터(주로 GET 조회할 때 사용됨. POST도 사용하긴 함)와 '@RequestParam'을 사용했기 때문에,
@@ -73,17 +85,16 @@ public class OrderController {
 
 
     @PostMapping("/order")
-    public String create(@RequestParam("memberId") Long memberId,
+    public String create(@RequestParam("memberId") Long memberId, //여기서 매개변수명('memberId'..)는 내 맘대로 해도 됨
                          @RequestParam("itemId") Long itemId,
                          @RequestParam("count") int count
                          ) {
 
 
-        orderService.order(memberId, itemId, count);
+        orderService.order(memberId, itemId, count); //어떤 고객이, 어떤 상품을, 몇 개의 수량  으로 주문'했는지' 대한 정보를
+                                                     //서버에 저장함
 
-
-
-        return "redirect:/order";
+        return "redirect:/orders"; //주문 내역 목록
     }
 
 

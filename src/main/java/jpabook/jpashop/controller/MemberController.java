@@ -26,7 +26,7 @@ public class MemberController {
 
     //[ '회원 등록'강 00:00~ ]. '실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발'
 
-    //< 신규 회원 등록하는 '폼 페이지(=뷰 createMemberForm.html)'로 이동시키는 메소드 >
+    //< 신규 회원 등록하는 '폼 페이지(=뷰 createMemberForm.html)'로 이동시키는(사용자에게 해당 폼 페이지를 보여주기 위한) 메소드 >
     //'서버 ---> 화면'의 과정
     @GetMapping("/members/new")
     public String createForm(Model model) { //이렇게 메소드의 매개변수로 Model 객체가 오는 경우는,
@@ -69,7 +69,7 @@ public class MemberController {
 
 
     //< 신규 회원 등록하는 '폼 페이지(=뷰 createMemberForm.html)'에 신규 회원이 입력한 본인 회원정보를
-    // 이제 DB에 '등록 post'시키는 메소드 >
+    //  여기 컨트롤러 메소드가 받아와서, 그 폼에 입력된 정보를 이제 DB에 '등록 post'시키는 메소드 >
 
     //사용자가 저~기 '뷰 createMemberForm'에서 입력한 본인의 회원가입 정보 입력 데이터를 method='post'를 통해 받아와서
     //아래에서 그 신규 정보를 서버에 입력하는 기능을 수행하는 메소드임.

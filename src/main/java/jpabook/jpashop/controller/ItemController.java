@@ -25,7 +25,7 @@ public class ItemController {
 
     //[ '상품 등록'강 00:00~ ]. '실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발'
 
-    //< 신규 '상품 등록'하는 '폼 페이지(=뷰 createItemForm.html)'로 이동시키는 메소드 >
+    //< 신규 '상품 등록'하는 '폼 페이지(=뷰 createItemForm.html)'로 이동시키는(사용자에게 해당 폼 페이지를 보여주기 위한) 메소드 >
     //'서버 ---> 화면'의 과정
     @GetMapping("/items/new")
     public String createForm(Model model) {
@@ -46,7 +46,7 @@ public class ItemController {
     //< 신규 상품 등록 >
 
     //< 신규 상품 등록하는 '폼 페이지(=뷰 createItemForm.html)'에 사용자가 신규로 입력한 신규 '상품 정보'를
-    // 이제 DB에 '등록 post'시키는 메소드 >
+    //  여기 컨트롤러 메소드가 받아와서, 그 폼에 입력된 정보를 이제 DB에 '등록 post'시키는 메소드 >
 
     //- '화면(사용자가 입력한 데이터) ---> 서버'의 과정
 
