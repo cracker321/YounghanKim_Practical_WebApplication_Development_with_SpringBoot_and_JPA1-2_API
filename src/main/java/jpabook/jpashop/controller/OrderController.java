@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -58,19 +59,28 @@ public class OrderController {
 //========================================================================================================
 
 
-    @PostMapping("/")
-    public String create(OrderForm form) { //- '변수 form': 사용자가 'OrderForm 객체'의 필드 속성들 형식에 맞추어서
-                                           //              폼 화면에 입력한 정보.
-                                           //              그리고, 그 정보를 submit 했으니, 이제 그것을 여기서 받아와서,
-                                           //              서버 DB에 저장하는 과정인 것임.
+    //< '쿼리파라미터'와 '@RequestParam' >
+    //여기서는 쿼리파라미터(주로 GET 조회할 때 사용됨. POST도 사용하긴 함)와 '@RequestParam'을 사용했기 때문에,
+    //1.클라이언트가 URL 주소창에 'www.thekary.com/.../order?memberId=kuka92&itemId=4224323&count=2'와 같이 입력하고,
+    //2.클라이언트가 URL을 다 입력하면, 웹 브라우저가 해당 URL로 HTTP GET 요청을 보내고,
+    //3.이 요청은 '서버'로 전달되어, 스프링부트 어플리케이션은 해당 요청을 처리하기 위해 '매핑된 컨트롤러 메소드'를 찾고
+    //  (여기서는 아래 create 메소드)
+    //4.메소드에 있는 '@RequestParam 어노테이션'은 쿼리파라미터에서 'memberId', 'itemId', 'count'라는 이름의
+    //  쿼리 파라미터 값을 추출함.
+    //5.그리고 그 추출한 값을 각각의 매개변수 'Long membermemberId', 'Long itemmmmmId', 'int counttttt' 등등
+    //  매개변수 이름은 자유롭게 하여 그 매개변수에 바인딩 시키는 것임
+    //6.그리고 이제 그 파라미터 값을 그 메소드 안의 수행 로직에서 사용해서 실행되는 것임.
 
-        OrderForm order = new OrderForm();
 
-        order.setMember(form.getMember());
-        order.setDelivery(form.getDelivery());
-        order.setOrderDate(form.getOrderDate());
-        order.setOrderItems(form.getOrderItems());
-        order.setStatus(form.getStatus());
+    @PostMapping("/order")
+    public String create(@RequestParam("memberId") Long memberId,
+                         @RequestParam("itemId") Long itemId,
+                         @RequestParam("count") int count
+                         ) {
+
+
+        orderService.order(memberId, itemId, count);
+
 
 
         return "redirect:/order";
