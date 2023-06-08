@@ -6,6 +6,7 @@ import jpabook.jpashop.domain.Item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,7 +95,6 @@ public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코
         order.getOrderItems().add(orderItem);
         */
         //위에 로직처럼 해 줄 수 있으나, 아래 스타일처럼 하기로 내가 결정했으니, ...
-
         Order order = Order.createOrder(member, delivery, orderItem);
 
 
@@ -103,7 +103,9 @@ public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코
                                      //'OrderItem 객체('엔티티 Order' 참조)', 'Delivery 객체('엔티티 Delivery' 참조)'도
                                      //'그와 동시에 DB에 영속화 persist 된다!'.
 
-        return order.getId(); //05:10~
+        return order.getId(); //위의 과정들을 거쳐 사용자가 신규 주문 정보를 입력하여 새롭게 생성된 '주문 정보(=주문 객체)'의
+                              //식별자(=id값)만 일단 반환함. 이것을 나중에 다른 곳에서 사용하기 위해 일부러 이렇게 설정한 것임.
+                              // 05:10~
     }
 
 
@@ -128,12 +130,15 @@ public class OrderService { //'ctrl + shift + T' 누르면, 바로 '테스트코
 
 //=================================================================================================================
 
+//    //[ '주문 서비스 개발'강. 14:55~ ]. 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
+//    //[ '주문 목록 검색, 취소'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
 
-//    //< 전체 주문 검색 >. '주문 서비스 개발'강. 14:55~
-//    public List<Order> findOrders(OrderSearch orderSearch){ //'Order 객체 내부의
-//
-//        return orderRepository.findAll(orderSearch);
-//    }
+//    //< 전체 주문 목록 검색 >.
+
+    public List<Order> findOrders(OrderSearch orderSearch){ //'Order 객체 내부의
+
+        return orderRepository.findAllByString(orderSearch);
+    }
 
 
 //=================================================================================================================

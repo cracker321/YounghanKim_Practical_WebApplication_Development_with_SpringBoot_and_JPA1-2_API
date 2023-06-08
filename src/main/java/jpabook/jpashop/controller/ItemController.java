@@ -125,7 +125,7 @@ public class ItemController {
 
 
     @GetMapping("/items/{itemId}/edit") //-'itemId': URL경로의 일부인 '경로변수'
-    //           반드시 '@PathVariable("itemId")의 itemId와 같은 글자여야 한다!!
+    //                                                  반드시 '@PathVariable("itemId")의 itemId와 같은 글자여야 한다!!
     //1.이 'itemId'는 '@PathVariable("itemId")와 연결되어 서로 바인딩되고
     //2.메소드의 매개변수 itemitemId는 @PathVariable("itemId")를 통해 전달된
     //'경로변수 {itemId}'의 값을 담는 '메소드의 매개변수'가 되는 것이다!
@@ -162,7 +162,8 @@ public class ItemController {
 //========================================================================================================
 
 
-    //< 상품 수정하는 '폼 페이지(=뷰 updateItemForm.html)'에 사용자가 수정한 '상품 정보'를 이제 DB에 '등록 post'시키는 메소드 >
+    //< 상품 수정하는 '폼 페이지(=뷰 updateItemForm.html)'에 사용자가 수정한 '상품 정보'를 사용자가 submit 제출 버튼 누르면,
+    //  여기 컨트롤러 메소드가 그 정보를 받아와서, 그 폼에 입력된 정보를 이제 DB에 '등록 post'시키는 메소드 >
 
     //-'화면(사용자가 수정 입력한 데이터) ---> 서버'의 과정
 
