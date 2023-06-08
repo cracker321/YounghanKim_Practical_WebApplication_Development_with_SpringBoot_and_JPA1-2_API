@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <!--
+  [ action 태그 ]: '/order'
+  - 여기의 form 데이터를 사용자가 화면에서 다 작성하고 submit 버튼 누르면,
+    사용자가 입력한 그 정보를 이제 처리할 서버 스크립트 파일의 경로를 지정함.
+  - '<form>태그'에 추가되어 데이터 처리를 위한 서버 스크립트 파일의 경로를 지정함.
+  - 사용자가 화면에서 아래 칸에 따라 '신규 상품 주문' 정보를 다 작성하고 submit 버튼 누르면, 이제 이 데이터가
+   바로 아래 action 태그의 URL 요청 링크인 '/order'로 화면이 넘어간다!-->
+    -->
+    <form role="form" action="/order" method="post">
+        <div class="form-group">
+            <label for="member">주문회원</label>
+            <select name="memberId" id="member" class="form-control">
+                <option value="">회원선택</option>
+                <option th:each="member : ${members}"
+                        th:value="${member.id}"
+                        th:text="${member.name}"/>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="item">상품명</label>
+            <select name="itemId" id="item" class="form-control">
+                <option value="">상품선택</option>
+                <option th:each="item : ${items}"
+                        th:value="${item.id}"
+                        th:text="${item.name}"/>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="count">주문수량</label>
+            <input type="number" name="count" class="form-control" id="count"
+                   placeholder="주문수량을 입력하세요">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>
