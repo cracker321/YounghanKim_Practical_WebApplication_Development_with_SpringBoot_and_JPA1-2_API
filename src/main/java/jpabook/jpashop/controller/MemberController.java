@@ -45,6 +45,7 @@ public class MemberController {
         //'뷰 members/createMemberForm'으로 찾아감.
         //'templates/members/createMemberForm.html'을 찾아가서, 그 내용을 브라우저로 보냄.
         //화면에 실제 표시되는 것 --> '뷰 members/createMemberForm' 내부의 로직이 화면에 표시됨.
+
 //=======================================================================================
 
 
@@ -74,6 +75,7 @@ public class MemberController {
     //사용자가 저~기 '뷰 createMemberForm'에서 입력한 본인의 회원가입 정보 입력 데이터를 method='post'를 통해 받아와서
     //아래에서 그 신규 정보를 서버에 입력하는 기능을 수행하는 메소드임.
     //- '화면(사용자가 입력한 데이터) ---> 서버'의 과정
+
     @PostMapping("/members/new")
     public String create(@Valid MemberForm form, BindingResult result) {
         //- '변수 form': 사용자가 'MemberForm 객체'의 필드 속성들 형식에 맞추어서 신규 가입에 필요한 '본인의 정보'를 폼 화면에
@@ -137,8 +139,10 @@ public class MemberController {
 //========================================================================================================
 
     //[ '회원 목록 조회'강. 00:00~ ]. '실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발'
-    //현재 전체 회원 조회
+
+    //< 현재 전체 회원 조회 >
     //'서버 ---> 화면'의 과정
+
     @GetMapping("/members")
     public String list(Model model) { //이렇게 메소드의 매개변수로 Model 객체가 오는 경우는,
                                       //브라우저 화면에 데이터를 표시하기 위해 '뷰'에 보낼 때 사용되는 메소드라 생각하면 됨!

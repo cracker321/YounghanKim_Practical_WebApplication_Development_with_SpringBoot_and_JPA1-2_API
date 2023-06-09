@@ -44,6 +44,7 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 
     //개발해야 할 기능
     //< 회원가입 >
+
     //'클라이언트로부터 전달받은 회원가입 하려는 '엔티티 Member 객체''를 '통으로 매개변수에 넣음'.
     @Transactional
     public Long join(Member member){ //[ '회원 서비스 개발'강 03:40~ ]
@@ -119,10 +120,11 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 
 
     //< 개별 회원 조회>
+
     //'개별 회원을 식별'하려면 '식별자인 id'가 필요하기 때문에, 매개변수로 id를 건네준 것임
     //@Transactional(readOnly = true) //'조회'를 수행할 때,'읽기 전용 트랜잭션 @Transactional(readOnly = true)'
                                       //를 붙이면, 보다 좀 더 '성능 최적화'가 가능함
-    public Member findMember(Long memberId){ //'조회'를 수행할 때 '@Transactional(readOnly = true)'를 붙이면,
+    public Member findOne(Long memberId){ //'조회'를 수행할 때 '@Transactional(readOnly = true)'를 붙이면,
                                       //보다 좀 더 '성능 최적화'가 가능함.
 
         Member member = memberRepository.findOne(memberId);
@@ -135,5 +137,25 @@ public class MemberService { //'테스트 케이스'를 작성할 때는 'Member
 
 //=====================================================================================================
 
+
+    //< 개별 회원정보 수정 >
+    @Transactional
+    public void update(Long id, String newName){ //'return 반환값'이 없는 update 메소드
+
+
+
+        Member member = memberRepository.findOne(id);
+        //id로 db에서 수정 대상 회원(당연히 Member 객체의 형태로 되어있음)을 꺼내와서,
+        //(이 모든 스프링 엔티티들은 다 '객체'이다. '하나의 회원은 하나의 Member 객체'이고, '하나의 주문은 하나의 Order 객체'이다!)
+
+        member.setName(newName); //그 수정 대상 회원 Member 객체의 새로운 이름을 지정해주고,
+
+        //아래 문장은 필요 없음!!
+        //왜냐하면 JPA의 '변경 감지 기능'에 의해 저기 위에까지만 하면, 자동으로 영속성 컨텍스트 flush 하고,
+        //db로 자동으로 커밋 됨.
+        //이 부분 더 공부하기!
+        //memberRepository.save(member); //회원정보가 수정된 그 회원을 다시 서버 db에 저장한다.
+
+    }
 
 }

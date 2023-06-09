@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +32,7 @@ public class Member {
     private Address address; //'회원 주소'
 
 
+    //@JsonIgnore //- '@JsonIgnore': 프론트단에서 포스트맨으로 '회원 Member'를 조회할 때, 아래 '해당 회원의 주문 내역'은 제외되어 조회됨.
     @OneToMany(mappedBy = "member") //'주인인 Order 객체의 필드 member'와 'N:1 양방향 연결(매핑)되어 있다'라는 뜻
                                     //현재 'Member 객체의 필드 orders'는 반대편 주인 객체 Order'와 매핑되어 있는
                                     //거울일 뿐이다 라는 뜻!
