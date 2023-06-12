@@ -44,6 +44,7 @@ public class InitDb {
 
 
     //< 코드의 순서상 아래 3개의 코드, 즉 3단계로 나눠서 작성한 이유 >
+
     //(1)public void init()
     //(2)static class InitService
     //(3)public void dbInit1()
@@ -119,6 +120,7 @@ public class InitDb {
     static class InitService{
         //cf) '@PostConstruct'는 '메소드 단위'위에서만 붙힐 수 있기 때문에, 여기 '클래스 InitService' 위에는 붙힐 수 없다!
 
+
         // < 내부클래스 InitService >
 
         //- *****중요*****
@@ -128,12 +130,14 @@ public class InitDb {
         //- '내부 클래스'로 선언되어 있기 때문에, '최종 클래스 InitDb의 내부'에서만 '접근 가능함'.
         //- '내부 클래스 InitService'는 그 내부에 필드로 'EntityManager'를 필드로 가지고 있어서,
         //  'JPA 엔티티'와 상호작용할 수 있음.
-        //- '내부 클래스 InitService'에는 '@Transactional'이 적용되었기 때문에, '트랜잭션 내에서 메소드가 실행도미'.
+        //- '내부 클래스 InitService'에는 '@Transactional'이 적용되었기 때문에, '트랜잭션 내에서 메소드가 실행됨.'
+
+        //# '정적 static'으로 선언한 이유
         //- '내부 클래스 InitService'는 '클래스 InitDb'의 '내부'에서만 사용되는 클래스이고, '클래스 InitDb의 내부'에서
         //  'InitService 객체'를 생성하여 '클래스 InitService에 접근'하고자 할 때,
         //  어차피 '내부 클래스 InitService'는 '클래스 InitDb의 내부에서만 사용되기 때문'에 '정적 static'으로 선언하여
         //  'InitService 객체의 인스턴스'를 따로 생성하지 않고 '저 위의 public void init(){ ..}'에서
-        //  따로 'InitService initService = new InitService()'라는 코드를 작성하지 않고도,
+        //  따로 '클참뉴클 InitService initService = new InitService()'라는 코드를 작성하지 않고도,
         //  바로 'InitService 객체에 접근'할 수 있도록 한 것임.
         //- '초기화 작업을 수행하는 구체적인 메소드 dbInit1'을 포함하고 있음.
         //- '엔티티매니저 EntityManager'를 필드로 가지고 있어서

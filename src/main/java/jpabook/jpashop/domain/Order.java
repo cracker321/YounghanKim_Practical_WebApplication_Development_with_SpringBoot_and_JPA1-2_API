@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -29,7 +31,7 @@ public class Order {
                                //대소문자는 상관없음. "member_id"로 해도 상관없음.
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) //'@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로,
+    @ManyToOne(fetch = LAZY) //'@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로,
                                        //반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
     @JoinColumn(name = "MEMBER_ID") //'주인이 아닌 테이블 MEMBER의 PK 컬럼인 MEMBER_ID'
                                     //= '주인 테이블(현재 테이블) ORDERS의 FK 컬럼인 MEMBER_ID'
@@ -54,9 +56,8 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
-
     //'주인 객체'는 '현재 객체인 Order 객체'임
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     //- '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로, 반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
     //- 'cascade = CascadeType.PERSIST':
     //  '1:1 양방향 매핑'에서는 꼭 반드시 '주인이 아닌 객체('Delivery 객체')의 내부 필드'에 'cascade'를 쓰는 것은 아니고,
@@ -75,7 +76,6 @@ public class Order {
     //  그냥, 딱 '현재의 Order 객체와 Delivery 객체 간 관계' 정도에서나 쓰는 것임.
     //- 따라서, '만약 '서비스 OrderService 등'에서 'Order 객체를 영속화 persist 시킨다면'',
     //  '그와 동시에 Delivery 객체도 같이 자동으로 영속화됨!'
-
     @JoinColumn(name = "DELIEVERY_ID") //'주인이 아닌 테이블 DELIEVERY의 PK 컬럼인 DELIVERY_ID'
                                        //= '주인 테이블(현재 테이블) ORDERS의 FK 컬럼인 DELIVERY_ID'
     private Delivery delivery; //'클래스 Delivery의 필드 id'를 '참조한 필드'

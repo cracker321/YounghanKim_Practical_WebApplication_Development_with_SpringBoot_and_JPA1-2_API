@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,13 @@ public class Delivery {
     @Column(name = "DELIVERY_ID")
     private Long id;
 
+    //[ '간단한 주문 조회 V1: 엔티티를 직접 노출'강. 07:58~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+    @JsonIgnore //- 1)만약, 정말 어쩔 수 없이 DTO가 아닌 '엔티티'를 생으로 노출시켜 데이터를 송수신해야 하는 경우일 때,
+                //  2)그리고, 그 경우가 'N:1 또는 1:1 '양'방향 매핑'일 때에는,
+                //  => 1.두 연관관계 엔티티들 중 하나는 반드시 @JsonIgnore 해주고, 그리고
+                //     2.'서버 실행 JpashopApplication'의 내부에 'Hibernate5Module 객체' 관련 로직을작성해줘야 한다!
+                //       ('Hibernate5Module 라이브러리' 의존성을 build.gradle에 추가해줘야 함)
+                //  이렇게 함을 통해서 둘 중의 하나를 @JsonIgnore로 끊어줘야, 무한루프 문제가 발생하지 않음!
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     private Order order;
 

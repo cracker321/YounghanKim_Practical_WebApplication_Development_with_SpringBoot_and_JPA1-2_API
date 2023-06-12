@@ -32,7 +32,14 @@ public class Member {
     private Address address; //'회원 주소'
 
 
-    //@JsonIgnore //- '@JsonIgnore': 프론트단에서 포스트맨으로 '회원 Member'를 조회할 때, 아래 '해당 회원의 주문 내역'은 제외되어 조회됨.
+    //[ '간단한 주문 조회 V1: 엔티티를 직접 노출'강. 06:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+    @JsonIgnore //- 1)만약, 정말 어쩔 수 없이 DTO가 아닌 '엔티티'를 생으로 노출시켜 데이터를 송수신해야 하는 경우일 때,
+                //  2)그리고, 그 경우가 'N:1 또는 1:1 '양'방향 매핑'일 때에는,
+                //  => 1.두 연관관계 엔티티들 중 하나는 반드시 @JsonIgnore 해주고, 그리고
+                //     2.'서버 실행 JpashopApplication'의 내부에 'Hibernate5Module 객체' 관련 로직을작성해줘야 한다!
+                //       ('Hibernate5Module 라이브러리' 의존성을 build.gradle에 추가해줘야 함)
+                //  이렇게 함을 통해서 둘 중의 하나를 @JsonIgnore로 끊어줘야, 무한루프 문제가 발생하지 않음!
+                //- 프론트단에서 포스트맨으로 '회원 Member'를 조회할 때, 아래 '해당 회원의 주문 내역'은 제외되어 조회됨.
     @OneToMany(mappedBy = "member") //'주인인 Order 객체의 필드 member'와 'N:1 양방향 연결(매핑)되어 있다'라는 뜻
                                     //현재 'Member 객체의 필드 orders'는 반대편 주인 객체 Order'와 매핑되어 있는
                                     //거울일 뿐이다 라는 뜻!
