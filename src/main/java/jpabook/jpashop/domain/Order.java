@@ -155,6 +155,7 @@ public class Order {
     //'주문된 상품 을 생성하려면', '주문한 회원 정보 Member', '주문된 상품의 배송 정보 Delivery',
     //'주문한 상품들 OrderItem...'의 정보가 모두 필요하다!
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){ //'... 문법'!
+        //- '...': '클래스 InitDb 내부의 Order.createOrder(member, delivery, orderItem1, orderItem2);'를 참고하기
 
         Order order = new Order(); //- '엔티티 Order'를 사용하기 위해, 여기서 'Order 객체를 생성해줌'.
                                    //  여기서 '엔티티 Order 객체를 만들지 않으면', 아래에서 'Order 객체를 사용할 수 없게 됨'.

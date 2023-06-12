@@ -18,8 +18,8 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: none   #스프링의 'ddl-auto' 기본 설정은 'create-drop
-                       # - 'none': 한 번 데이터를 넣어두면, 그게 사라지지 않고 계속 서버 재실행해도 데이터가 유지됨.
+      ddl-auto: create   #스프링의 'ddl-auto' 기본 설정은 'create-drop
+                       # -'none': 한 번 데이터를 넣어두면, 그게 사라지지 않고 계속 서버 재실행해도 데이터가 유지됨.
                        # -'create': 내가 현재 가지고 있는 '엔티티들을 다 drop 후에 다시 엔티티 create 하고 애플리케이션 실행'시킴.
                        # -'create-drop': 'create'와 동일하되, '애플리케이션을 종료할 때 drop 쿼리를 DB로 날려서
                        #                 기존의 엔티티 등 데이터들을 다 삭제'시킴.
