@@ -71,6 +71,9 @@ public class OrderRepository {
 
 
     //[ JPQL 강의 부분임 ].
+
+    //< N+1 문제를 해결하지 못한 JPQL 쿼리문 >
+
     public List<Order> findAllByString(OrderSearch orderSearch) {
 
         //language=JPAQL
@@ -110,6 +113,55 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+
 //==================================================================================================================
+
+
+    //[ '간단한 주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화'강. 01:10~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+
+
+    //< N+1 문제를 해결한 JPQL 쿼리문 >
+    public List<Order> findAllWithMemberDelivery() {
+
+        //- 아래 쿼리 한 번으로 '주문 Order 객체', '회원 Member 객체', '배송 Delivery 객체'를 각각 조회하는 대신
+        //  '한 번의 쿼리로 조회'가 가능해짐. 성능 향상.
+        //  결과적으로, 아래 한 번의 쿼리를 통해 '주문', '회원', '배송' 데이터를 '함께 조회(가져옴)'한 후,
+        //  '각 정보를 모두 포함하는 List<Order> 객체'를 반환함. 이렇게 함으로써 N+1과 같은 성능 저하 이슈 방지 가능.
+        //- 'em.createQuery': 이것을 선언해줌으로써, 'JPQL 쿼리'를 생성해주는 것이 가능함.
+        //- 'select o from Order o': '주문 엔티티 Order 객체'를 '조회'하기 위한 쿼리.
+        //                          '객체'를 가져오는 것이므로, '별칭(alias) o'를 사용하여, '별칭 o'에 '쿼리로 가져온 결과를 저장'함.
+        //- ' join fetch o.member m': '주문 엔티티 Order 객체'와 '회원 엔티티 Member 객체'를 '조인'하고,
+        //                            그리고 '회원 엔티티 Member 객체의 정보'를 '가져오기'위한 '조인(fetch join)'임.
+        //- ' join fetch o.delivery d': '주문 엔티티 Order 객체'와 '배송 엔티티 Delivery 객체'를 '조인'하고,
+        //                              그리고, '배송 엔티티 Delivery 객체의 정보'를 '가져오기'위한 '조인(fetch join)'임.
+        //- '.getResultList()': 'em.createQuery(...)'가 다 실행되고 나면, 그 결과로 반환된 TypedQuery 객체에 대해
+        //                      '.getResultList()'를 호출하여 결과를 반환함.
+        //                      '메소드 getResult()'는 '쿼리를 실행한 후 결과를 List<Order> 형태로 반환'함.
+        //- 'Order.class': '메소드 createQuery의 두 번째 파라미터'로, JPQL 쿼리를 통해 반환되는 결과를 어떤 객체 타입'으로
+        //                  반환할지 지정하는 역할임.
+
+        //< 'join fetch >
+        //*****중요중요!!*** 아주아주 자주 사용함! 100% 이해해야 함! N+1 문제를 해결하는 방법임.
+        //- 'join fetch'를 통해 '객체 그래프'와 'select 조회 데이터'를 한 방에 동시에 같이 가져오는 것임!
+        //   fetch join'을 아주 적극적으로 활용해야 함!
+        //- 여기서 'fetch join'을 사용하였기에 'order -> member'와 'order -> delivery'는 '이미 조회 완료'된 상태이므로,
+        //  '주문 엔티티 Order 객체' 내부의 '필드 @ManyToOne(fetch=LAZY) Member'와 '필드 @OneToOne(fetch=LAZY)의
+        //  'LAZY'는 이제 무시되고, 따라서 당연히 지연로딩은 없다!
+
+        //-'메소드 createQuery'는 '첫 번째 매개변수'로 'JPQL 쿼리를 사용하여 조회할 대상 및 연관관계를 정의'하고
+        // '두 번재 매개변수'로 'JPQL 쿼리의 반환 결과를 어떤 객체 타입으로 반환할지를 지정함'.
+
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+
+
+//==================================================================================================================
+
+
 
 }

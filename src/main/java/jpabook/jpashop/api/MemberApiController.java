@@ -129,9 +129,8 @@ public class MemberApiController {
     @AllArgsConstructor
     static class Result<T>{
         //'제네릭타입 T'를 사용하여 다양한 데이터타입의 데이터를 저장하고 반환하는 API 응답 객체로 사용됨.
-        //여기의 'Result 객체'는 이 프로젝트 어디서든(특히 컨트롤러 메소드에서..?) 사용될 수 있음.
         //컨트롤러 메소드의 'public 자료형 메소드명(){}' 에서, '자료형'에 'List<Member>', 'List<Order>' 등등을 넣고,
-        //그 컨트롤러 메소드의 반환값(응답 객체. 'return ~')으로 'return result' 이렇게 사용할 수 있음!
+        //그 컨트롤러 메소드의 반환값(API 응답 객체. 'return ~')으로 사용할 수 있음!
 
 
         //< Result<T> 객체로 데이터를 감싸는 이유 >
