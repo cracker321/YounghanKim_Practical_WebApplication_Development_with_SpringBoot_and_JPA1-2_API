@@ -32,6 +32,7 @@ public class OrderSampleApiController {
     //======================================================================================================
 
     //[ '간단한 주문 조회 V1: 엔티티를 직접 노출'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+
     private final OrderRepository orderRepository;
 
     @GetMapping("/api/v1/sample-orders")
@@ -46,6 +47,7 @@ public class OrderSampleApiController {
 
 
     //[ '간단한 주문 조회 V2: 엔티티를 DTO로 변환'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+
     //- 권장하는 방법임.
     //  만약 여기서 'N+1 문제로 인한 성능 이슈'가 발생하면, 저 아래의 v3에서의 'fetch join'을 사용하면 된다!
     //  (v3를 통해 대부분의 N+1 성능 이슈는 해결 가능함.)
@@ -75,13 +77,15 @@ public class OrderSampleApiController {
 
 
     //[ '간단한 주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+
     //- 권장하는 방법임.
     //  v2에서의 'N+1 문제로 인한 성능 이슈'가 발생하면, 여기서 v3에서의 'fetch join'을 사용하면 된다!
     //  (v3를 통해 대부분의 N+1 성능 이슈는 해결 가능함.)
+    //- v2와 v3는 똑같은 로직이지만, v3는 그 내부 실행 쿼리가 N+1 문제를 해결한 쿼리이다ㅣ!
+    //- v4에 비해 v3는 레퍼지터리의 재사용성이 높음. 많은 API에서 'orderRepository.findAllWithMemberDelivery()'를
+    //  사용할 수 있음. 좋음.
 
-    //v2와 v3는 똑같은 로직이지만, v3는 그 내부 실행 쿼리가 N+1 문제를 해결한 쿼리이다ㅣ!
 
-    
     //< N+1 문제를 '해결한' JPQL 쿼리문을 담고 있는 '레펏 OrderRepository의 메소드 findAllWithMemberDelivery'
 
     //< '레펏 orderRepository의 메소드 findAllWithMemberDelivery'의 'join fetch' >
@@ -110,9 +114,19 @@ public class OrderSampleApiController {
 
 
     //[ '간단한 주문 조회 V4: JPA에서 DTO로 바로 조회'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화. pdf p20
+
     //- 권장하지 않는 방법임(권장하는 방법은 v2와 v3(v2에서 성능이슈 발생할 경우 v3 사용)
     //- v2에서 발생한 N+1 성능 이슈를 v3의 'fetch join'으로도 해결하지 못할 경우, 여기의 v4를 사용하는 것이다.
     //  사실, v3를 통해 대부분의 N+1 성능 이슈는 해결 가능함.
+    //- 레퍼지토리의 재사용성이 떨어짐. 다른 API에서는 'orderRepository.findOrderDtos()'를 사용할 수 없음.
+    //  오직 여기 '컨트롤러의 메소드 ordersV4()'에서만 이 '메소드 findOrderDtos'를 사용할 수 있게 딱 맞게 설계됨.
+    //  즉, 유연성이 아예 없음.
+
+    //- 일반적인 SQL을 사용할 때처럼 원하는 값을 선택해서 조회
+    //- new 명령어를 사용해서 JPQL의 결과를 DTO로 즉시 변환
+    //- SELECT절에서 원하는 데이터를 직접 선택하므로 DB에서 애플리케이션 네트웍 용량 최적화(그러나, 그 최적화는 생각보다 미미함)
+    //  (단, 데이터의 크기가 매우매우 클 경우에는 그 최적화가 필요할 수도 있음. 이건 고민해봐야 함.)
+    //- 레포지터리 재사용성이 떨어짐. API스펙에 맞춘 코드가 레퍼지터리에 들어가는 단점.
 
     @GetMapping("/api/v4/sample-orders")
     public List<OrderSampleQueryDto> ordersV4(){
@@ -122,13 +136,10 @@ public class OrderSampleApiController {
 
     }
 
-
-
-
     //======================================================================================================
 
-
     //< DTO 생성 >
+
     //- v2와 v3에서 활용됨.
     //- v4에서는 별도의 '클래스 OrderSampleQueryDto'를 활용함.
     @Data
