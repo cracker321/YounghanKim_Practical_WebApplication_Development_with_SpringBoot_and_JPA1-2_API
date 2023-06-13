@@ -39,6 +39,7 @@ public class OrderRepository {
 
 
     //< '개별 주문(1건)을 DB에서 '해당 주문의 id값'으로 조회'하기 >
+
     //'클라이언트로부터 매개변수로 들어온 id에 해당하는 1개의 주문'을 DB에서 찾아와서 '그 주문을 리턴'해줌
     public Order findOne(Long orderId) { //'여기서의 매개변수 orderId'는 그냥 여기 메소드에서만 통용되는 것에 불과하고,
                                          //중요한 것은, '레펏 OrderRepository의 메소드 findOne을 호출할 때는',
@@ -54,6 +55,7 @@ public class OrderRepository {
 
 
     //[ '주문 리포지토리 개발'강. 01:00~ ]. 코드 pdf p63
+
     //< 전체 주문 조회 >
     public List<Order> findAll(OrderSearch orderSearch) {
         return em.createQuery("select o from Order o join o.member m" + " WHERE o.status = :status "
@@ -119,7 +121,6 @@ public class OrderRepository {
 
     //[ '간단한 주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화'강. 01:10~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
 
-
     //< N+1 문제를 해결한 JPQL 쿼리문 >
     public List<Order> findAllWithMemberDelivery() {
 
@@ -153,14 +154,36 @@ public class OrderRepository {
 
         return em.createQuery(
                 "select o from Order o" +
-                        " join fetch o.member m" +
+                        " join fetch o.member m" + //'주문 Order 객체 내부의 필드 @ManyToOne(fetch=LAZY) Member'와 조인
                         " join fetch o.delivery d", Order.class
         ).getResultList();
     }
 
 
 
-//==================================================================================================================
+    //==========================================================================================================
+
+    //'레퍼지토리'와 '컨트롤러'를 역으로 참조해서 서로 '의존관계'가 '절대 생겨서는 안된다!!'
+    //(즉, '컨 -> 서 -> 리'처럼 순방향으로 해야 하는데, '리 -> 서 -> 컨' 처럼 역방향으로 참조하는 것은 안됨)
+
+
+    //[ '간단한 주문 조회 V4: JPA에서 DTO로 바로 조회'강. 02:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화.'pdf p20'
+
+    //- 권장하는 방법은 아님.
+
+    public List<OrderSampleQueryDto> findOrderDtos(){ //DB로부터 QueryDto를 반환하게 할 것임.
+
+        return em.createQuery("select new jpabook.jpashop.repository.OrderSampleQueryDto(o.id, m.name," +
+                "o.orderDate, o.status, d.address)" +
+                " from Order o" +
+                " join o.member m" +
+                " join o.delivery d", OrderSampleQueryDto.class //DB로부터 'OrderSampleQueryDto 객체' 타입으로 데이터를 가져옴.
+        ).getResultList();
+    }
+
+    //==========================================================================================================
+
+
 
 
 
