@@ -1,4 +1,4 @@
-package jpabook.jpashop.repository;
+package jpabook.jpashop.repository.order.samplequery;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 //[ '간단한 주문 조회 V4: JPA에서 DTO로 바로 조회'강. 01:40~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
 
 //- 권장하지 않는 방법임(권장하는 방법은 v2와 v3(v2에서 성능이슈 발생할 경우 v3 사용)
-//- v2에서 발생한 N+1 성능 이슈를 v3의 'fetch join'으로도 해결하지 못할 경우, 여기의 v4를 사용하는 것이다.
+//- v2에서 발생한 대부분(95% 이상)의 N+1 성능 이슈를 v3의 'fetch join'으로도 해결하지 못할 경우, 여기의 v4를 사용하는 것이다.
 //  사실, v3를 통해 대부분의 N+1 성능 이슈는 해결 가능함.
 //- 레퍼지토리의 재사용성이 떨어짐. 다른 API에서는 'orderRepository.findOrderDtos()'를 사용할 수 없음.
 //  오직 '컨트롤러의 메소드 ordersV4()'에서만 이 '메소드 findOrderDtos'를 사용할 수 있게 딱 맞게 설계됨.

@@ -3,16 +3,17 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
-import jpabook.jpashop.repository.OrderSampleQueryDto;
+import jpabook.jpashop.repository.order.samplequery.OrderSampleQueryDto;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.samplequery.OrderSampleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +34,23 @@ public class OrderSampleApiController {
 
     //[ '간단한 주문 조회 V1: 엔티티를 직접 노출'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
 
+    //< v1: 아래처럼 '엔티티를 직접 노출'해서 클라이언트에게 반환하면 절대 네버 안된다! >
+    //- 그냥 이건 강의에서 설명해 주는 거니깐, 그냥 아래를 그런 차원에서 강의에서 설명해준 것임.
+
+    private final OrderSampleQueryRepository orderSampleQueryRepository; //'v4'를 사용할 때 필요한 의존성임.
     private final OrderRepository orderRepository;
 
     @GetMapping("/api/v1/sample-orders")
     public List<Order> orderV1(){
 
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
+
+        //단축키: iter 누르고 + tab 누르면 아래 forEach문인 'for (Order order : all){ }'를 자동으로 생성해줌.
+        for (Order order : all) { //'여기서 변수 order'는 '이 forEach 문 내부'에서만 사용되는 자체적 변수임.
+            order.getMember().getName(); //LAZY 강제 초기화
+            order.getDelivery().getAddress(); //LAZY 강제 초기화
+
+        }
 
         return all;
     }
@@ -80,7 +92,7 @@ public class OrderSampleApiController {
 
     //- 권장하는 방법임.
     //  v2에서의 'N+1 문제로 인한 성능 이슈'가 발생하면, 여기서 v3에서의 'fetch join'을 사용하면 된다!
-    //  (v3를 통해 대부분의 N+1 성능 이슈는 해결 가능함.)
+    //  (v3를 통해 대부분(95% 이상)의 N+1 성능 이슈는 해결 가능함.)
     //- v2와 v3는 똑같은 로직이지만, v3는 그 내부 실행 쿼리가 N+1 문제를 해결한 쿼리이다ㅣ!
     //- v4에 비해 v3는 레퍼지터리의 재사용성이 높음. 많은 API에서 'orderRepository.findAllWithMemberDelivery()'를
     //  사용할 수 있음. 좋음.
@@ -131,12 +143,14 @@ public class OrderSampleApiController {
     @GetMapping("/api/v4/sample-orders")
     public List<OrderSampleQueryDto> ordersV4(){
 
-        return orderRepository.findOrderDtos();
+        return orderSampleQueryRepository.findOrderDtos();
 
 
     }
 
+
     //======================================================================================================
+
 
     //< DTO 생성 >
 
