@@ -1,10 +1,10 @@
 package jpabook.jpashop.api;
 
 
-import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
-import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.domain.*;
+import jpabook.jpashop.domain.Item.Album;
+import jpabook.jpashop.domain.Item.Book;
+import jpabook.jpashop.domain.Item.Item;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.order.samplequery.OrderSampleQueryDto;
 import jpabook.jpashop.repository.OrderSearch;
@@ -156,8 +156,12 @@ public class OrderSampleApiController {
 
     //- v2와 v3에서 활용됨.
     //- v4에서는 별도의 '클래스 OrderSampleQueryDto'를 활용함.
+    //- DTO의 필드에는 일단 이 프로젝트 안에 존재하는 '모든 엔티티의 모든 필드들'을 다 그냥 넣을 수 있음.
+    //  중요한 건, 이 DTO를 사용하는 컨트롤러에서, 그 '어떤 엔티티'를 그때그때 넣는지가 중요한 거임.
+    //  저 위에서는 계속 '주문 엔티티 Order 객체'를 그 파라미터로 넣어서 아래 DTO 중, '주문 Order 객체의 필드들'에 해당되는 부분만
+    //  쏙 꺼내서 활용하고 있는 것임.
     @Data
-    static class SampleOrderDto{ //'배송지 정보'
+    static class SampleOrderDto{ //< 배송지 정보 >
 
         private Long orderId;
         private String name;
@@ -165,11 +169,35 @@ public class OrderSampleApiController {
         private OrderStatus orderStatus;
         private Address address;
 
-        public SampleOrderDto(Order order){ //DTO의 생성자
+
+        //아래는 그냥 이론적으로 DTO에는(어떤 DTO이든지 다 가능) 아무 유관 무관한 엔티티나 다 넣는 것이 가능하다는 것을 보여주기 위함..
+        private Book lksjdfldkjs;
+        private Album alkjsdlwejtl2344;
+        private Item lkajrlkjqlkfj;
+        private Category lkjdglkdjgljd;
+
+
+        public SampleOrderDto(Order order){ //< DTO의 생성자 >
+                                            //이 생성자가 있기 때문에, 저~ 위에서 '스트림' 사용할 때
+                                            //'map(o -> new SampleOrderDto(o))' 에서 'new SampleOrderDto(o)'에
+                                            //'o'가 들어갈 수 있는 것이다! 당연함..
             orderId = order.getId();
             name = order.getMember().getName(); //LAZY 초기화
             orderDate = order.getOrderDate();
             address = order.getDelivery().getAddress(); //LAZY 초기화
+
+            //cf) 생성자 내부에서 'this 키워드' 없이 'static class SampleOrderDto'의 필드들을 초기화 할 수 있는 이유
+            //- '생성자 내부의 필드들의 이름(orderId, name, orderDate, address)'과 '생성자의 매개변수의 이름(Order order)'이
+            //  '같지 않기 때문'에,
+            //  (즉, '내부 필드의 이름 orderId'와 '변수 order.getId()' '문자 그대로 다른 문자'이기 때문에,
+            //   자바는  '변수 order.getId()'가 이제 필드에 대입됨을 명확하게 인식하게 값을 할당할 수 있음.
+            //  따라서, 굳이 this를 사용할 필요가 없음. 물론 당연히 this를 사용해도 아무 상관 없음.
+            //- 위 코드에서 SampleOrderDto 클래스의 필드와 생성자의 매개변수를 비교하면 다음과 같습니다:
+            //  orderId 필드와 order 매개변수의 이름이 다릅니다.
+            //  name 필드와 order 매개변수의 이름이 다릅니다.
+            //  orderDate 필드와 order 매개변수의 이름이 다릅니다.
+            //  address 필드와 order 매개변수의 이름이 다릅니다.
+
         }
 
     }
