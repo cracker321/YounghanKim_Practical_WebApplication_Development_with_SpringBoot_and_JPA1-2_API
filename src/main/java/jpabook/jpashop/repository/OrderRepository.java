@@ -161,6 +161,52 @@ public class OrderRepository {
     }
 
 
+//==================================================================================================================
+
+
+    //[ '주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화. pdf p25~
+
+
+    public List<Order> findAllWithItem() {
+
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" + //@ManyToOne
+                " join fetch o.delivery d" + //@OneToOne
+                " join fetch o.orderItems oi" +
+                " join fetch oi.item i", Order.class
+                ).getResultList();
+    }
+
+
+
+    //==========================================================================================================
+
+    //SQL쿼리
+    //'Do It! 오라클 p234'
+    //- 'SQL에서 컬럼(열)'은 '자바 엔티티 객체에서의 필드(속성)'과 동일한 것이다!
+
+    /*
+    SELECT *
+    FROM orders o
+    JOIN order_item oi
+    ON order_id = oi.order_id
+    WHERE o.order_id = 4
+
+    - 'SELECT *': 결과로 얻고자 하는 컬럼(열)을 선택하는 작업. '*'을 사용하여, 모든 열을 선택해서 가져오도록함.
+                  최종 결과로 얻을 테이블에 관련 테이블의 모든 열이 포함될 것임.
+    - 'FROM orders o': '테이블 order'에 있는 데이터에 한해 데이터를 조회해서 가져온다.
+    - 'FROM orders o JOIN order_item oi': '테이블 order'와 '테이블 order_item'을 '결합(JOIN)'한다.
+    - 'ON o.order_id = oi.order_id': '테이블 order의 컬럼(열) order_id에 줄줄이 달린 수많은 데이터들(행)'과
+                                     '테이블 order_item의 컬럼(열) order_id에 줄줄이 달린 수많은 데이터들(행)'들 중에
+                                     '서로의 값이 같은 행'을 '결합 및 조회해서 가져와'라는 뜻임.
+    - 'WHERE o.order_id = 4': 그런데, '서로의 값이 같은 행을 결합 및 조회해서 그것을 모두 가져오는 것이 아니'라,
+                              '테이블 order의 컬럼(열) order_id에 줄줄이 달린 수많은 데이터들(행) 중에서 그 order_id의 값이 4인 행'만
+                              조회해서 가져와!
+                              그리고, 당연히 '*'를 입력했으니, 그 데이터를 가지고 있는 '테이블 order의 모든 컬럼(열)'을 가져와!
+
+
+     */
+
 
     //==========================================================================================================
 
