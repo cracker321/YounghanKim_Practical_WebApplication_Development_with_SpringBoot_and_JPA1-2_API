@@ -88,6 +88,7 @@ public class OrderApiController {
 
     //< 주문 엔티티 Order 객체의 DTO 생성 >
 
+
     //- DTO의 필드에는 일단 이 프로젝트 안에 존재하는 '모든 엔티티의 모든 필드들'을 다 그냥 넣을 수 있음.
     //  중요한 건, 이 DTO를 사용하는 컨트롤러에서, 그 '어떤 엔티티'를 그때그때 넣는지가 중요한 거임.
     //  저 위에서는 계속 '주문 엔티티 Order 객체'를 그 파라미터로 넣어서 아래 DTO 중, '주문 Order 객체의 필드들'에 해당되는 부분만
@@ -105,10 +106,11 @@ public class OrderApiController {
         private String name;
         private LocalDateTime orderDate;
         private OrderStatus orderStatus;
-        private Address address;
+        private Address address; //이런 '값 객체(VO. Value Object)'는 어차피 변경될 일도 없어서, 그냥 이렇게 엔티티로 노출해도 됨.
         //private List<OrderItem> orderItems; //이렇게 '주문상품 엔티티 OrderItem 객체'를 그대로 가져오면 JSON에서 null로 조회됨.
                                               //즉 문제임. 이건 지연로딩, 프록시 문제인 듯. 이거 강의 QnA에 관련 질의응답 있음.
-        private List<OrderItemDto> orderItems; //대신 이렇게 dto로 감싸줘야 한다.
+                                              //이렇게 엔티티를 외부에 노출해서 사용하면 안되는 것이다!
+        private List<OrderItemDto> orderItems; //대신 이렇게 DTO로 감싸줘야 한다.
 
         //아래는 그냥 이론적으로 DTO에는(어떤 DTO이든지 다 가능) 아무 유관 무관한 엔티티나 다 넣는 것이 가능하다는 것을 보여주기 위함..
         private Book lksj435dfldkjs;
@@ -125,9 +127,12 @@ public class OrderApiController {
             name = order.getMember().getName();
             orderDate = order.getOrderDate();
             orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress();
-            //orderItems = getOrderItems();
-            orderItems = order.getOrderItems().stream()
+            address = order.getDelivery().getAddress(); //이런 '값 객체(VO. Value Object)'는 어차피 변경될 일도 없어서,
+                                                        // 그냥 이렇게 엔티티로 노출해도 됨.
+            //orderItems = getOrderItems(); //이렇게 '주문상품 엔티티 OrderItem 객체'를 그대로 가져오면 JSON에서 null로 조회됨.
+                                            //즉 문제임. 이건 지연로딩, 프록시 문제인 듯. 이거 강의 QnA에 관련 질의응답 있음.
+                                            //이렇게 엔티티를 외부에 노출해서 사용하면 안되는 것이다!
+            orderItems = order.getOrderItems().stream() //대신 이렇게 DTO로 감싸줘야 한다.
                     .map(orderItem -> new OrderItemDto(orderItem))
                     .collect(Collectors.toList());
 
