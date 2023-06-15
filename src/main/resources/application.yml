@@ -33,6 +33,7 @@ spring:
         highlight_sql: true
         default_batch_fetch_size: 1000 # '주문 조회 V3.1: 엔티티를 DTO로 변환 - 페이징과 한계 돌파'강.
                                        # 컬렉션, 일대다 관계일 때 페이징 최적화 방법임.
+                                       # 그냥 맥시멈 데이터 사이즈인 500~1000으로 하는 게 좋음
 
 
   messages:
