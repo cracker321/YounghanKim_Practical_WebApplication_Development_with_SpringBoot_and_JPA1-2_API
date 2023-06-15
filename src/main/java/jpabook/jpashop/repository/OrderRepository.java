@@ -158,11 +158,13 @@ public class OrderRepository {
         // '두 번재 매개변수'로 'JPQL 쿼리의 반환 결과를 어떤 객체 타입으로 반환할지를 지정함'.
 
         return em.createQuery(
+                //'주문 : 회원', '주문 : 배송' 관계는 '~ToOne' 관계이기 때문에, 아래 쿼리 한 방으로 바로 데이터 빠르게 조회 가능함.
                 "select o from Order o" +
                         " join fetch o.member m" +  //@ManyToOne: '주문 Order 객체(N. 주인)'와 '회원 Member 객체(1)'
                                                     //'주문 Order 객체 내부의 필드 @ManyToOne(fetch=LAZY) Member'와 조인
                         " join fetch o.delivery d", Order.class //@OneToOne: '주문 Order 객체(1. 주 테이블)와 '배송 Delivery 객체(1)'
-                                                                //           여기까지는 한 방에 데이터들 다 가져올 수 있음.
+                                                                //           여기까지는 쿼리 한 방에 데이터들 다 가져올 수 있음.
+
         ).getResultList();
     }
 
@@ -189,15 +191,18 @@ public class OrderRepository {
 
     public List<Order> findAllWithItem() {
 
-        return em.createQuery("select distinct o from Order o" + //'distinct'를 통해 중복을 제거해서 데이터를 가져옴.
+        return em.createQuery(
+
+                //'주문 : 회원', '주문 : 배송' 관계는 '~ToOne' 관계이기 때문에, 아래 쿼리 한 방으로 바로 데이터 빠르게 조회 가능함.
+                "select distinct o from Order o" + //'distinct'를 통해 중복을 제거해서 데이터를 가져옴.
                 " join fetch o.member m" + //@ManyToOne: '주문 Order 객체(N. 주인)'와 '회원 Member 객체(1)'
                 " join fetch o.delivery d" + //@OneToOne: '주문 Order 객체(1. 주 테이블)와 '배송 Delivery 객체(1)'
-                                             //           여기까지는 한 방에 데이터들 다 가져올 수 있음.
+                                             //           여기까지는 쿼리 한 방에 데이터들 다 가져올 수 있음.
                 " join fetch o.orderItems oi" + //@OneToMany: '주문 Order 객체(1. 주인)'와 '주문 OrderItems 객체(N)'
                 " join fetch oi.item i", Order.class
                 )
-                .setFirstResult(1)
-                .setMaxResults(100)
+                .setFirstResult(1) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
+                .setMaxResults(100) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
                 .getResultList();
     }
 
@@ -209,6 +214,9 @@ public class OrderRepository {
     //[ '주문 조회 V3.1: 엔티티를 DTO로 변환 - 페이징과 한계 돌파'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화.
     //pdf p26~
 
+    //- '주문 : 회원', '주문 : 배송' 관계는 '~ToOne 관계'이기 때문에, 쿼리 한 방으로 바로 데이터 빠르게 조회 가능함.
+    //- 또한, '~ToOne 관계'는 아무리 많이 join fetch를 해도 정상적으로 페이징이 작동한다.
+    //  문제를, '~toMany 관계'에서의 페이징임.
 
     //< 컬렉션(리스트, 집합, 맵..)을 fetch join하면, 페이징이 불가능하다 >
 
@@ -228,12 +236,16 @@ public class OrderRepository {
     //  'hibernate.default_batch_fetch_size': 글로벌 설정
     //  '@BatchSize': 개별 최적화
     //  이 옵션을 사용하면, 컬렉션이나 프록시 객체를 한꺼번에 설정한 size만큼 IN 쿼리로 조회한다.
+    public List<Order> findAllWithMemberDelivery(int offset, int limit){
 
-
-
-
-
-
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).setFirstResult(offset)
+         .setMaxResults(limit)
+         .getResultList();
+    }
 
 
 

@@ -10,6 +10,7 @@ import jpabook.jpashop.repository.OrderSearch;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -108,14 +109,35 @@ public class OrderApiController {
     //======================================================================================================
 
 
+    //[ '주문 조회 V3.1: 엔티티를 DTO로 변환 - 페이징과 한계 돌파'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화.
+    // pdf p26~
+
+    //- 'yml 설정 파일'에 'default_batch_fetch_size: 1000'를 입력해줘야 한다!
+    //  컬렉션(리스트, 집합, 맵, ..), 일대다 관계일 때 페이징 최적화 방법임.
+
     @GetMapping("/api/v3.1/orders")
-    public List<OrderDto> ordersV3_paging(){
+    public List<OrderDto> ordersV3_paging(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "offset", defaultValue = "100") int limit){
 
 
-        orderRepository.find
+        List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
+
+        List<OrderDto> orderDtos = orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(Collectors.toList());
+
+        return orderDtos;
+
     }
 
     //======================================================================================================
+
+
+
+    //======================================================================================================
+
+
 
 
     //< 주문 엔티티 Order 객체의 DTO 생성 >
