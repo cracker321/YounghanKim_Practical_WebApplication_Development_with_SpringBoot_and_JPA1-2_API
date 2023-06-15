@@ -198,11 +198,14 @@ public class OrderRepository {
                 " join fetch o.member m" + //@ManyToOne: '주문 Order 객체(N. 주인)'와 '회원 Member 객체(1)'
                 " join fetch o.delivery d" + //@OneToOne: '주문 Order 객체(1. 주 테이블)와 '배송 Delivery 객체(1)'
                                              //           여기까지는 쿼리 한 방에 데이터들 다 가져올 수 있음.
+                 //아래처럼 '@OneToMany' 관계에서 'fetch join'을 사용하면 안된다!
+                 //왜냐하면, '주문 : 주문상품' 관계가 일대다 관계이기 때문에, 쿼리 결과에서 데이터의 행(row) 수가
+                 //예측할 수 없이 늘어나기 때문에, 이로 인해 페이징이 제대로 작동하지 않게 된다.
                 " join fetch o.orderItems oi" + //@OneToMany: '주문 Order 객체(1. 주인)'와 '주문 OrderItems 객체(N)'
                 " join fetch oi.item i", Order.class
                 )
-                .setFirstResult(1) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
-                .setMaxResults(100) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
+                //.setFirstResult(1) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
+                //.setMaxResults(100) //페이징 작성할 때 이렇게 작성하면 절대 안됨. 아래 v3.1 방법으로 작성해야 함.
                 .getResultList();
     }
 
@@ -215,8 +218,12 @@ public class OrderRepository {
     //pdf p26~
 
     //- '주문 : 회원', '주문 : 배송' 관계는 '~ToOne 관계'이기 때문에, 쿼리 한 방으로 바로 데이터 빠르게 조회 가능함.
-    //- 또한, '~ToOne 관계'는 아무리 많이 join fetch를 해도 정상적으로 페이징이 작동한다.
-    //  문제를, '~toMany 관계'에서의 페이징임.
+    //- 또한, '~ToOne 관계'는 아무리 많이 fetch join를 해도 정상적으로 페이징이 작동한다.
+    //  '~ToOne 관계'는 fetch join 해도 페이징에 영향을 주지 않음. 따라서, '~ToOne 관계'는 fetch join으로 쿼리 수를 줄여 해결하고,
+    //  문제가 되는 '~ToMany 관계'에서의 페이징은
+    //  yml파일에서 'hibernate.default_batch_fetch_size = 1000'을 추가하여 해결한다.
+    //  (그냥 맥시멈 데이터 사이즈인 1000으로 하는 게 좋음)
+    //- v3에서의 컬렉션 fetch join은 페이징이 불가능하지만, v3.1의 이 방법은 페이징이 가능하다.
 
     //< 컬렉션(리스트, 집합, 맵..)을 fetch join하면, 페이징이 불가능하다 >
 
@@ -229,9 +236,18 @@ public class OrderRepository {
 
     //< 페이징의 한계 돌파 >: 페이징 + 컬렉션(리스트, 집합, 맵..) 엔티티를 함께 조회하는 방법
 
-    //- 일대일(OneToOne), 다대일(ManyToOne) 관계를 모두 fetch join 한다.
+    //- 일대일(OneToOne), 다대일(ManyToOne) 관계는 모두 쿼리에 fetch join을 넣어준다!
+    //  (아래 쿼리에서 이 부분: " join fetch o.member m" +  " join fetch o.delivery d")
     //  ~ToOne 관계는 데이터(행) 수를 증가시키지 않으므로, 페이징 쿼리에 영향을 주지 않음.
-    //- 컬렉션은 지연로딩을 조회한다.
+    //- *****중요*****
+    //  그러나, '주문(1. 주인) : 주문상품(N)'의 관계와 같은 '~ToMany'관계에 'fetch join'을 넣어서 조회하면,
+    //  이렇게 컬렉션을 fetch join하면, 데이터(행) 수가 증가하므로, 일대다에서 일(1)을 기준으로 페이징하는 것이 어려움.
+    //  따라서, 그 대신 컬렉션은 지연로딩으로 설정한다.
+    //  (지연로딩은 주문 데이터를 조회할 때, 주문 상품 데이터를 즉시 가져오지 않고, 실제로 접근할 때 가져오는 방식)
+    //  이렇게 함으로써 데이터의 증가나 성능 저하를 방지할 수 있음.
+    //- 성능 최적화를 위해 yml파일에 hibernate.default_batch_fetch_size 및 @BatchSize를 사용함.
+    //- 컬렉션(일대다 또는 다대다 관계 및 리스트, 집합, 맵 등)은 지연로딩을 조회한다.
+    //  여기서는 하나의 주문(Order)을 기준으로 여러 개의 주문상품(OrderItem)이 컬렉션 형태로 연결되어 있음.
     //- 지연로딩 성능 최적화를 위해 hibernate.default_batch_fetch_size 및 @BatchSize를 적용한다.
     //  'hibernate.default_batch_fetch_size': 글로벌 설정
     //  '@BatchSize': 개별 최적화
@@ -242,6 +258,10 @@ public class OrderRepository {
                 "select o from Order o" +
                         " join fetch o.member m" +
                         " join fetch o.delivery d", Order.class
+                //여기까지만 딱 작성해줘도, 마치 v3에서의 아래 쿼리 부분이 정상적으로 작동되고,
+                //원래라면 v3에서 발생해야 할 데이터 행(row)의 기하급수적 증가 이슈가 발생하지 않게 된다!
+                //( " join fetch o.orderitem oi" +
+                //" join fetch oi.item i " )
         ).setFirstResult(offset)
          .setMaxResults(limit)
          .getResultList();

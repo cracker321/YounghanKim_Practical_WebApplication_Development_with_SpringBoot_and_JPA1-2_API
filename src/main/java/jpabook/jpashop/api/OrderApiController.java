@@ -93,6 +93,7 @@ public class OrderApiController {
     //[ '주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화'강. 00:00~ ]. 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화. pdf p25~
 
     //'Order 객체 : OrderItems 객체 = 1: N' 관계로 인해 JPA의 distinct를 사용해서 '주문 Order 엔티티 객체의 중복을 제거'해주는 것임.
+    //- 단 v3에서는 '컬렉션', '일대다 관계'일 때 '페이징 처리'를 할 수 없다는 치명적 단점이 있다.
 
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3(){
