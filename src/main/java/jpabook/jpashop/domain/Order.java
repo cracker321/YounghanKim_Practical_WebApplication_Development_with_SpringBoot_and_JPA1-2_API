@@ -115,6 +115,8 @@ private Member member;
     //[ '엔티티 설계시 주의점'강. 22:50~ ]. 더 확인하기!
 
     //< 연관관계 편의 메소드1 > : '양방향 매핑'일 때 사용하는 것!
+    //- 구체적 설명은 저~ 아래에 입력해놨음.
+  
     //'주인인 Order 객체(N)'와 '주인이 아닌 Member 객체(1)' 연관관계에서 '주인인 Order 객체'의 입장
     public void changeMember(Member m){
 
@@ -303,6 +305,7 @@ private Member member;
         < 연관관계 편의 메소드 1 >
 
         public void setTeam(Team team){
+        //- 'Team team': '외부 클래스 어딘가에서 현재 메소드를 호출할 때 새로운 인자값으로 들어온 새롭게 주어질 팀 team'
         //- 'void': 어차피, 특별한 반환값을 내놓지 않아도 되고, 그냥 서로 간의 관계를 재설정 또는..
 
 
