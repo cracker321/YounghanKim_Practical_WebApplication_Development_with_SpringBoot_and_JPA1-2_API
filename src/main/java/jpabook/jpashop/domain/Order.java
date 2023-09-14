@@ -32,8 +32,25 @@ public class Order {
     private Long id;
 
 
-    @ManyToOne(fetch = LAZY) //교재 p296~ 확인. '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로,
+    @ManyToOne(fetch = LAZY) //*****중요*****
+                             // 교재 p296~ 확인. '@ManyToOne', '@OneToOne'은 기본설정이 '즉시로딩 EAGER'이므로,
                              //반드시 '지연로딩 LAZY'로 설정 바꿔줘야 한다!
+                             //(1) @ManyToOne이 붙은 모든 곳
+                             //(2) @OneToOne이 붙은 모든 곳
+                             //   1) public class User{
+                             //             ...
+                             //         @OneToOne(fetch=LAZY)  <-- 1:1 양방향 매핑에서 주인 객체 User
+                             //         @JoinColumn(name="CART_ID")
+                             //         private Cart cart;
+                             //              ...
+                             //      }
+                             //   2) public class Cart{
+                             //              ...
+                             //         @OneToOne(mappedBy="cart", fetch=LAZY) <- 1:1 양방향 매핑에서 비주인 객체 Cart
+                             //         private User user;
+                             //              ...
+                             //      }
+
     @JoinColumn(name = "MEMBER_ID") //'주인이 아닌 테이블 MEMBER의 PK 컬럼인 MEMBER_ID'
                                     //= '주인 테이블(현재 테이블) ORDERS의 FK 컬럼인 MEMBER_ID'
     private Member member; //'클래스 Member의 필드 id'를 '참조한 필드'
